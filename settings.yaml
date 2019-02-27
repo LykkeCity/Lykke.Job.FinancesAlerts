@@ -1,0 +1,29 @@
+FinancesAlertsJob:
+    Db:
+        LogsConnString:
+            settings-key: FinancesAlertsJob-LogsConnString
+            types:
+            - AzureTableStorage
+        DataConnString:
+            settings-key: FinancesAlertsJob-DataConnString
+            types:
+            - AzureTableStorage
+    CryptoFacilities:
+        ApiPath:
+            settings-key: FinancesAlertsJob-CfApiPath
+        ApiPrivateKey:
+            settings-key: FinancesAlertsJob-CfApiPrivateKey
+        ApiPublicKey:
+            settings-key: FinancesAlertsJob-CfApiPublicKey
+SlackNotifications:
+    AzureQueue:
+        ConnectionString:
+            settings-key: SlackNotificationsConnString
+            types:
+                - AzureTableStorage
+        QueueName:
+            settings-key: SlackQueueName
+MonitoringServiceClient:
+    MonitoringServiceUrl:
+        settings-key: MonitoringServiceUrl
+
