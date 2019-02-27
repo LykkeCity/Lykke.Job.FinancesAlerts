@@ -51,12 +51,18 @@ namespace Lykke.Job.FinancesAlerts.DomainServices.MetricCalculators
             await _privateCfWsClient.Start().ConfigureAwait(false);
         }
 
-        public void Dispose()
+        public async Task StopAsync()
         {
-            _privateCfWsClient.Stop().GetAwaiter().GetResult();
+            if (_privateCfWsClient != null)
+                await _privateCfWsClient.Stop();
 
             _privateCfWsClient?.Dispose();
             _privateCfWsClient = null;
+        }
+
+        public void Dispose()
+        {
+            StopAsync().GetAwaiter().GetResult();
         }
 
         public Task<IEnumerable<Metric>> CalculateMetricsAsync()

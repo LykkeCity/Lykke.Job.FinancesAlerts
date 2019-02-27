@@ -11,6 +11,7 @@ using Lykke.Job.FinancesAlerts.DomainServices.MetricCalculators;
 using Lykke.Job.FinancesAlerts.Services;
 using Lykke.Job.FinancesAlerts.Settings.JobSettings;
 using Lykke.Job.FinancesAlerts.PeriodicalHandlers;
+using Lykke.Job.FinancesAlerts.Settings;
 using Lykke.Sdk;
 using Lykke.Sdk.Health;
 using Lykke.SettingsReader;
@@ -22,10 +23,10 @@ namespace Lykke.Job.FinancesAlerts.Modules
         private readonly FinancesAlertsJobSettings _settings;
         private readonly IReloadingManager<FinancesAlertsJobSettings> _settingsManager;
 
-        public JobModule(FinancesAlertsJobSettings settings, IReloadingManager<FinancesAlertsJobSettings> settingsManager)
+        public JobModule(IReloadingManager<AppSettings> settingsManager)
         {
-            _settings = settings;
-            _settingsManager = settingsManager;
+            _settings = settingsManager.CurrentValue.FinancesAlertsJob;
+            _settingsManager = settingsManager.Nested(s => s.FinancesAlertsJob);
         }
 
         protected override void Load(ContainerBuilder builder)
@@ -44,6 +45,7 @@ namespace Lykke.Job.FinancesAlerts.Modules
                 .SingleInstance();
 
             builder.RegisterType<PeriodicalHandler>()
+                .AsSelf()
                 .As<IStopable>()
                 .SingleInstance();
 

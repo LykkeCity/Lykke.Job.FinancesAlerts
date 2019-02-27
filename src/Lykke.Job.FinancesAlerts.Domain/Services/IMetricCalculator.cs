@@ -11,5 +11,7 @@ namespace Lykke.Job.FinancesAlerts.Domain.Services
         Task<IEnumerable<Metric>> CalculateMetricsAsync();
 
         Task StartAsync();
+
+        Task StopAsync();
     }
 }

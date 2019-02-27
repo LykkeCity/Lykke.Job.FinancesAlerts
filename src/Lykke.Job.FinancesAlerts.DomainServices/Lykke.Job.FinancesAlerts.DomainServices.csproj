@@ -7,6 +7,6 @@
     <ProjectReference Include="..\Lykke.Job.FinancesAlerts.Domain\Lykke.Job.FinancesAlerts.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Lykke.CryptoFacilities.Client" Version="1.1.0" />
+    <PackageReference Include="Lykke.CryptoFacilities.Client" Version="1.1.1" />
   </ItemGroup>
 </Project>

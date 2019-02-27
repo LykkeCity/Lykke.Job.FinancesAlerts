@@ -8,5 +8,7 @@ namespace Lykke.Job.FinancesAlerts.Domain.Services
         List<IMetricCalculator> GetAllMetricCalculators();
 
         Task StartAsync();
+
+        Task StopAsync();
     }
 }

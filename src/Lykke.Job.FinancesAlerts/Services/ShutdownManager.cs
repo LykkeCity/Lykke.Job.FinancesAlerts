@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Common;
 using Common.Log;
 using Lykke.Common.Log;
+using Lykke.Job.FinancesAlerts.Domain.Services;
 using Lykke.Sdk;
 
 namespace Lykke.Job.FinancesAlerts.Services
@@ -11,11 +12,16 @@ namespace Lykke.Job.FinancesAlerts.Services
     public class ShutdownManager : IShutdownManager
     {
         private readonly ILog _log;
+        private readonly IMetricCalculatorRegistry _metricCalculatorRegistry;
         private readonly IEnumerable<IStopable> _items;
 
-        public ShutdownManager(ILogFactory logFactory, IEnumerable<IStopable> items)
+        public ShutdownManager(
+            ILogFactory logFactory,
+            IMetricCalculatorRegistry metricCalculatorRegistry,
+            IEnumerable<IStopable> items)
         {
             _log = logFactory.CreateLog(this);
+            _metricCalculatorRegistry = metricCalculatorRegistry;
             _items = items;
         }
 
@@ -32,8 +38,8 @@ namespace Lykke.Job.FinancesAlerts.Services
                     _log.Warning($"Unable to stop {item.GetType().Name}", ex);
                 }
             }
-            
-            await Task.CompletedTask;
+
+            await _metricCalculatorRegistry.StopAsync().ConfigureAwait(false);
         }
     }
 }

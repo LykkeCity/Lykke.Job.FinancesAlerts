@@ -25,6 +25,14 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
             }
         }
 
+        public async Task StopAsync()
+        {
+            foreach (var calculator in _calculators.Values)
+            {
+                await calculator.StopAsync().ConfigureAwait(false);
+            }
+        }
+
         public List<IMetricCalculator> GetAllMetricCalculators()
         {
             return _calculators.Values.ToList();
