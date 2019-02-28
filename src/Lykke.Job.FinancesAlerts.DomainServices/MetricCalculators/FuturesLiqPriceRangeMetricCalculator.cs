@@ -67,11 +67,12 @@ namespace Lykke.Job.FinancesAlerts.DomainServices.MetricCalculators
 
         public Task<IEnumerable<Metric>> CalculateMetricsAsync()
         {
-            var metrics = _instumentsMetricDictionary.Values.Select(v =>
+            var metrics = _instumentsMetricDictionary.Select(p =>
                 new Metric
                 {
                     Name = MetricInfo.Name,
-                    Value = v,
+                    Value = p.Value,
+                    Info = p.Key,
                 });
 
             return Task.FromResult(metrics);

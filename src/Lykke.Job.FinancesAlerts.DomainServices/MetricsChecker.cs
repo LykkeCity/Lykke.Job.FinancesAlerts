@@ -170,9 +170,13 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
                     throw new ArgumentOutOfRangeException();
             }
 
+            var metricName = string.IsNullOrWhiteSpace(metric.Info)
+                ? metric.Name
+                : $"{metric.Name} for {metric.Info}";
+
             return isStarted
-                ? $"Metric {metric.Name} has value {metric.Value} that is {op} threshold value {alertRule.ThresholdValue}"
-                : $"Alerting for metric {metric.Name} is off. Current value is {metric.Value} (threshold = {alertRule.ThresholdValue})";
+                ? $"Metric {metricName} has value {metric.Value} that is {op} threshold value {alertRule.ThresholdValue}"
+                : $"Alerting for metric {metricName} is off. Current value is {metric.Value} (threshold = {alertRule.ThresholdValue})";
         }
     }
 }
