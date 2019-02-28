@@ -2,6 +2,8 @@
 {
     public interface IAlertRule
     {
+        string Id { get; set; }
+
         string MetricName { get; set; }
 
         ComparisonType ComparisonType { get; set; }

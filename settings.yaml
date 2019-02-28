@@ -15,6 +15,10 @@ FinancesAlertsJob:
             settings-key: FinancesAlertsJob-CfApiPrivateKey
         ApiPublicKey:
             settings-key: FinancesAlertsJob-CfApiPublicKey
+    UseSmsMocks:
+        settings-key: FinancesAlertsJob-UseSmsMocks
+        types:
+            - Optional
 SlackNotifications:
     AzureQueue:
         ConnectionString:
@@ -26,4 +30,9 @@ SlackNotifications:
 MonitoringServiceClient:
     MonitoringServiceUrl:
         settings-key: MonitoringServiceUrl
-
+SmsSenderServiceClient:
+    ServiceUrl :
+        settings-key: SmsSenderServiceUrl
+EmailPartnerRouterServiceClient:
+    ServiceUrl:
+        settings-key: EmailPartnerRouterServiceUrl

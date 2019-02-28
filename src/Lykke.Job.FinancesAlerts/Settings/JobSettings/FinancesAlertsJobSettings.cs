@@ -1,4 +1,5 @@
 ﻿using Lykke.CryptoFacilities;
+using Lykke.SettingsReader.Attributes;
 
 namespace Lykke.Job.FinancesAlerts.Settings.JobSettings
 {
@@ -7,5 +8,8 @@ namespace Lykke.Job.FinancesAlerts.Settings.JobSettings
         public DbSettings Db { get; set; }
 
         public CryptoFacilitiesApiSettings CryptoFacilities { get; set; }
+
+        [Optional]
+        public bool UseSmsMocks { get; set; }
     }
 }

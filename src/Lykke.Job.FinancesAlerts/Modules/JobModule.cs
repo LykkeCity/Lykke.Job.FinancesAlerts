@@ -14,18 +14,20 @@ using Lykke.Job.FinancesAlerts.PeriodicalHandlers;
 using Lykke.Job.FinancesAlerts.Settings;
 using Lykke.Sdk;
 using Lykke.Sdk.Health;
+using Lykke.Service.EmailPartnerRouter;
+using Lykke.Service.SmsSender.Client;
 using Lykke.SettingsReader;
 
 namespace Lykke.Job.FinancesAlerts.Modules
 {
     public class JobModule : Module
     {
-        private readonly FinancesAlertsJobSettings _settings;
+        private readonly AppSettings _settings;
         private readonly IReloadingManager<FinancesAlertsJobSettings> _settingsManager;
 
         public JobModule(IReloadingManager<AppSettings> settingsManager)
         {
-            _settings = settingsManager.CurrentValue.FinancesAlertsJob;
+            _settings = settingsManager.CurrentValue;
             _settingsManager = settingsManager.Nested(s => s.FinancesAlertsJob);
         }
 
@@ -49,15 +51,7 @@ namespace Lykke.Job.FinancesAlerts.Modules
                 .As<IStopable>()
                 .SingleInstance();
 
-            builder.Register(c =>
-                    new AlertRuleRepository(
-                        AzureTableStorage<AlertRuleEntity>.Create(
-                            _settingsManager.ConnectionString(s => s.Db.DataConnString),
-                            "AlertRules",
-                            c.Resolve<ILogFactory>(),
-                            TimeSpan.FromSeconds(30))))
-                .As<IAlertRuleRepository>()
-                .SingleInstance();
+            RegisterAzureRepositories(builder);
 
             builder.RegisterType<MetricsChecker>()
                 .As<IMetricsChecker>()
@@ -68,6 +62,8 @@ namespace Lykke.Job.FinancesAlerts.Modules
                 .SingleInstance();
 
             RegisterMetricCalculators(builder);
+
+            RegisterServiceClients(builder);
         }
 
         private void RegisterMetricCalculators(ContainerBuilder builder)
@@ -75,7 +71,43 @@ namespace Lykke.Job.FinancesAlerts.Modules
             builder.RegisterType<FuturesLiqPriceRangeMetricCalculator>()
                 .As<IMetricCalculator>()
                 .SingleInstance()
-                .WithParameter(TypedParameter.From(_settings.CryptoFacilities));
+                .WithParameter(TypedParameter.From(_settings.FinancesAlertsJob.CryptoFacilities));
+        }
+
+        private void RegisterAzureRepositories(ContainerBuilder builder)
+        {
+            builder.Register(c =>
+                    new AlertRuleRepository(
+                        AzureTableStorage<AlertRuleEntity>.Create(
+                            _settingsManager.ConnectionString(s => s.Db.DataConnString),
+                            "AlertRules",
+                            c.Resolve<ILogFactory>(),
+                            TimeSpan.FromSeconds(30))))
+                .As<IAlertRuleRepository>()
+                .SingleInstance();
+
+            builder.Register(c =>
+                    new AlertSubscriptionRepository(
+                        AzureTableStorage<AlertSubscriptionEntity>.Create(
+                            _settingsManager.ConnectionString(s => s.Db.DataConnString),
+                            "AlertSubscriptions",
+                            c.Resolve<ILogFactory>(),
+                            TimeSpan.FromSeconds(30))))
+                .As<IAlertSubscriptionRepository>()
+                .SingleInstance();
+        }
+
+        private void RegisterServiceClients(ContainerBuilder builder)
+        {
+            builder.Register(ctx =>
+                    new EmailPartnerRouterClient(_settings.EmailPartnerRouterServiceClient.ServiceUrl, ctx.Resolve<ILogFactory>().CreateLog(nameof(EmailPartnerRouterClient))))
+                .As<IEmailPartnerRouter>()
+                .SingleInstance();
+
+            if (_settings.FinancesAlertsJob.UseSmsMocks)
+                builder.RegisterType<SmsMockSender>().As<ISmsSenderClient>().SingleInstance();
+            else
+                builder.RegisterSmsSenderClient(_settings.SmsSenderServiceClient);
         }
     }
 }

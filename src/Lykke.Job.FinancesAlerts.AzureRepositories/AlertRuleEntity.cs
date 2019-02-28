@@ -7,6 +7,8 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
 {
     public class AlertRuleEntity : TableEntity, IAlertRule
     {
+        public string Id { get; set; }
+
         public string MetricName { get; set; }
 
         public string Author { get; set; }
@@ -18,8 +20,6 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
             set => ComparisonTypeStr = value.ToString();
         }
 
-        public string ComparisonTypeStr { get; set; }
-
         [IgnoreProperty]
         public decimal ThresholdValue
         {
@@ -28,22 +28,26 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
         }
 
         public string ThresholdValueStr { get; set; }
+        public string ComparisonTypeStr { get; set; }
 
         internal static AlertRuleEntity Create(IAlertRule alertRule)
         {
+            var id = Guid.NewGuid().ToString();
+
             return new AlertRuleEntity
             {
-                PartitionKey = GeneratePatitionKey(),
-                RowKey = Guid.NewGuid().ToString(),
+                PartitionKey = GeneratePatitionKey(alertRule.MetricName),
+                RowKey = id,
+                Id = id,
                 MetricName = alertRule.MetricName,
                 ComparisonTypeStr = alertRule.ComparisonType.ToString(),
                 ThresholdValueStr = alertRule.ThresholdValue.ToString(CultureInfo.InvariantCulture),
             };
         }
 
-        internal static string GeneratePatitionKey()
+        internal static string GeneratePatitionKey(string metricName)
         {
-            return "AlertRule";
+            return metricName;
         }
     }
 }
