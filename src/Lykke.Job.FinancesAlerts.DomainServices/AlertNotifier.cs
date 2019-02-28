@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Common;
 using Common.Log;
 using Lykke.Common.Log;
 using Lykke.Job.FinancesAlerts.Domain;
@@ -57,6 +58,8 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
             string topic,
             string message)
         {
+            _log.Info(topic, message, address.SanitizePhone());
+
             await _smsSenderClient.SendSmsAsync(address, $"{topic} : {message}").ConfigureAwait(false);
         }
 
@@ -65,6 +68,8 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
             string topic,
             string message)
         {
+            _log.Info(topic, message, address.SanitizeEmail());
+
             await _emailPartnerRouter.SendAsync(
                 null,
                 new EmailMessage

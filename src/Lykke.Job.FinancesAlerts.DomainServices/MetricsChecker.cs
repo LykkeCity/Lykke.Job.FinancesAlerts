@@ -59,7 +59,7 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
                 {
                     foreach (var alertRule in alertRules)
                     {
-                        bool needToFireAlert = false;
+                        bool needToFireAlert;
                         switch (alertRule.ComparisonType)
                         {
                             case ComparisonType.GreaterThan:
@@ -89,14 +89,18 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
                                     true)
                                 .ConfigureAwait(false);
                         }
-                        else if (_activeAlerts.Contains(alertRule.Id))
+                        else
                         {
-                            await ProcessAlertEventAsync(
-                                    metric,
-                                    alertRule,
-                                    false)
-                                .ConfigureAwait(false);
-                            _activeAlerts.Remove(alertRule.Id);
+                            var activeMetricRuleKey = GenerateActiveMetricRuleKey(metric, alertRule);
+                            if (_activeAlerts.Contains(activeMetricRuleKey))
+                            {
+                                await ProcessAlertEventAsync(
+                                        metric,
+                                        alertRule,
+                                        false)
+                                    .ConfigureAwait(false);
+                                _activeAlerts.Remove(activeMetricRuleKey);
+                            }
                         }
                     }
                 }
@@ -116,7 +120,8 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
             if (!subscriptions.Any())
                 return;
 
-            _activeAlerts.Add(alertRule.Id);
+            var activeMetricRuleKey = GenerateActiveMetricRuleKey(metric, alertRule);
+            _activeAlerts.Add(activeMetricRuleKey);
 
             var message = GenerateAlerMessage(
                 metric,
@@ -124,23 +129,33 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
                 isStarted);
             foreach (var subscription in subscriptions)
             {
-                var alertSubKey = $"{metric.Name}_{subscription.Type}_{isStarted}";
+                var alertSubscriptionKey = GenerateActiveSubscriptionKey(metric, subscription, isStarted);
                 var now = DateTime.UtcNow;
-                if (_lastAlertTimeDict.TryGetValue(alertSubKey, out var lastAlertTime))
+                if (_lastAlertTimeDict.TryGetValue(alertSubscriptionKey, out var lastAlertTime))
                 {
                     if (now - lastAlertTime < subscription.AlertFrequency)
                         continue;
                 }
 
-                _lastAlertTimeDict[alertSubKey] = now;
+                _lastAlertTimeDict[alertSubscriptionKey] = now;
 
                 await _alertNotifier.NotifyAsync(
                     subscription.Type,
                     subscription.SubscriptionData,
-                    $"{metric.Name} alert",
+                    isStarted ? $"{metric.Name} alert" : $"{metric.Name} alerting is off",
                     message)
                     .ConfigureAwait(false);
             }
+        }
+
+        private string GenerateActiveMetricRuleKey(Metric metric, IAlertRule alertRule)
+        {
+            return $"{alertRule.Id}_{metric.Info}";
+        }
+
+        private string GenerateActiveSubscriptionKey(Metric metric, IAlertSubscription subscription, bool isStarted)
+        {
+            return $"{metric.Name}_{metric.Info}_{subscription.Type}_{isStarted}";
         }
 
         private string GenerateAlerMessage(

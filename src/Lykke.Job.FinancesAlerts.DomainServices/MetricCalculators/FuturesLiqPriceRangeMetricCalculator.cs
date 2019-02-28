@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Common;
 using Lykke.Common.Log;
 using Lykke.CryptoFacilities;
 using Lykke.CryptoFacilities.WebSockets;
@@ -30,6 +31,7 @@ namespace Lykke.Job.FinancesAlerts.DomainServices.MetricCalculators
             {
                 Name = "FuturesLiqPriceDiffPercent",
                 Description = "Calculates futures contract liquidation price diff angainst its market price in percents",
+                Accuracy = 0,
             };
         }
 
@@ -65,7 +67,7 @@ namespace Lykke.Job.FinancesAlerts.DomainServices.MetricCalculators
             StopAsync().GetAwaiter().GetResult();
         }
 
-        public Task<IEnumerable<Metric>> CalculateMetricsAsync()
+        public Task<List<Metric>> CalculateMetricsAsync()
         {
             var metrics = _instumentsMetricDictionary.Select(p =>
                 new Metric
@@ -73,7 +75,8 @@ namespace Lykke.Job.FinancesAlerts.DomainServices.MetricCalculators
                     Name = MetricInfo.Name,
                     Value = p.Value,
                     Info = p.Key,
-                });
+                })
+                .ToList();
 
             return Task.FromResult(metrics);
         }
@@ -82,8 +85,9 @@ namespace Lykke.Job.FinancesAlerts.DomainServices.MetricCalculators
         {
             foreach (var positionMessage in m.Positions)
             {
-                _instumentsMetricDictionary[positionMessage.Instrument] =
-                    (positionMessage.MarkPrice - positionMessage.LiquidationThreshold) / positionMessage.MarkPrice;
+                var value = (positionMessage.MarkPrice - positionMessage.LiquidationThreshold) / positionMessage.MarkPrice * 100;
+                value = value.TruncateDecimalPlaces(MetricInfo.Accuracy + 1);
+                _instumentsMetricDictionary[positionMessage.Instrument] = value;
             }
 
             return Task.CompletedTask;

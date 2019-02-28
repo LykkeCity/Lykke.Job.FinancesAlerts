@@ -27,8 +27,7 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
 
         public async Task<IEnumerable<IAlertRule>> GetByMetricAsync(string metricName)
         {
-            var result = await _storage.GetDataAsync(metricName).ConfigureAwait(false);
-            return result ?? new List<AlertRuleEntity>();
+            return await _storage.GetDataAsync(metricName).ConfigureAwait(false);
         }
     }
 }
