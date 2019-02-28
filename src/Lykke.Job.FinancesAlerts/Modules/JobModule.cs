@@ -51,7 +51,9 @@ namespace Lykke.Job.FinancesAlerts.Modules
                 .As<IStopable>()
                 .SingleInstance();
 
-            RegisterAzureRepositories(builder);
+            builder.RegisterType<AlertNotifier>()
+                .As<IAlertNotifier>()
+                .SingleInstance();
 
             builder.RegisterType<MetricsChecker>()
                 .As<IMetricsChecker>()
@@ -61,9 +63,11 @@ namespace Lykke.Job.FinancesAlerts.Modules
                 .As<IMetricCalculatorRegistry>()
                 .SingleInstance();
 
-            RegisterMetricCalculators(builder);
+            RegisterAzureRepositories(builder);
 
-            RegisterServiceClients(builder);
+            RegisterNotificationComponents(builder);
+
+            RegisterMetricCalculators(builder);
         }
 
         private void RegisterMetricCalculators(ContainerBuilder builder)
@@ -97,7 +101,7 @@ namespace Lykke.Job.FinancesAlerts.Modules
                 .SingleInstance();
         }
 
-        private void RegisterServiceClients(ContainerBuilder builder)
+        private void RegisterNotificationComponents(ContainerBuilder builder)
         {
             builder.Register(ctx =>
                     new EmailPartnerRouterClient(_settings.EmailPartnerRouterServiceClient.ServiceUrl, ctx.Resolve<ILogFactory>().CreateLog(nameof(EmailPartnerRouterClient))))
@@ -105,9 +109,21 @@ namespace Lykke.Job.FinancesAlerts.Modules
                 .SingleInstance();
 
             if (_settings.FinancesAlertsJob.UseSmsMocks)
+            {
+                builder.Register(ctx => new SmsMockRepository(
+                        AzureTableStorage<SmsMessageMockEntity>.Create(
+                            _settingsManager.ConnectionString(s => s.Db.DataConnString),
+                            "MockSms",
+                            ctx.Resolve<ILogFactory>(),
+                            TimeSpan.FromSeconds(30))))
+                    .As<ISmsMockRepository>()
+                    .SingleInstance();
                 builder.RegisterType<SmsMockSender>().As<ISmsSenderClient>().SingleInstance();
+            }
             else
+            {
                 builder.RegisterSmsSenderClient(_settings.SmsSenderServiceClient);
+            }
         }
     }
 }

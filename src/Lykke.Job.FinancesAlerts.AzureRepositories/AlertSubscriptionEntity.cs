@@ -17,11 +17,19 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
             set => TypeStr = value.ToString();
         }
 
+        [IgnoreProperty]
+        public TimeSpan AlertFrequency
+        {
+            get => TimeSpan.Parse(AlertFrequencyStr);
+            set => AlertFrequencyStr = value.ToString();
+        }
+
         public string SubscriptionData { get; set; }
 
         public string Author { get; set; }
 
         public string TypeStr { get; set; }
+        public string AlertFrequencyStr { get; set; }
 
         internal static AlertSubscriptionEntity Create(IAlertSubscription alertSubscription)
         {
@@ -33,9 +41,10 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
                 RowKey = id,
                 Id = id,
                 AlertRuleId = alertSubscription.AlertRuleId,
-                TypeStr = alertSubscription.Type.ToString(),
                 SubscriptionData = alertSubscription.SubscriptionData,
                 Author = alertSubscription.Author,
+                TypeStr = alertSubscription.Type.ToString(),
+                AlertFrequencyStr = alertSubscription.AlertFrequency.ToString(),
             };
         }
 

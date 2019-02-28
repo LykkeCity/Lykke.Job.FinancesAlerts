@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Common.Log;
@@ -16,6 +17,8 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
         private readonly IAlertSubscriptionRepository _alertSubscriptionRepository;
         private readonly IMetricCalculatorRegistry _metricCalculatorRegistry;
         private readonly IAlertNotifier _alertNotifier;
+        private readonly Dictionary<string, DateTime> _lastAlertTimeDict = new Dictionary<string, DateTime>();
+        private readonly HashSet<string> _activeAlerts = new HashSet<string>();
 
         public MetricsChecker(
             ILogFactory logFactory,
@@ -56,30 +59,44 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
                 {
                     foreach (var alertRule in alertRules)
                     {
+                        bool needToFireAlert = false;
                         switch (alertRule.ComparisonType)
                         {
                             case ComparisonType.GreaterThan:
-                                if (metric.Value > alertRule.ThresholdValue)
-                                    await InitAlertEventAsync(metric, alertRule).ConfigureAwait(false);
+                                needToFireAlert = metric.Value > alertRule.ThresholdValue;
                                 break;
                             case ComparisonType.GreaterOrEqual:
-                                if (metric.Value >= alertRule.ThresholdValue)
-                                    await InitAlertEventAsync(metric, alertRule).ConfigureAwait(false);
+                                needToFireAlert = metric.Value >= alertRule.ThresholdValue;
                                 break;
                             case ComparisonType.Equal:
-                                if (metric.Value == alertRule.ThresholdValue)
-                                    await InitAlertEventAsync(metric, alertRule).ConfigureAwait(false);
+                                needToFireAlert = metric.Value == alertRule.ThresholdValue;
                                 break;
                             case ComparisonType.LessThan:
-                                if (metric.Value < alertRule.ThresholdValue)
-                                    await InitAlertEventAsync(metric, alertRule).ConfigureAwait(false);
+                                needToFireAlert = metric.Value < alertRule.ThresholdValue;
                                 break;
                             case ComparisonType.LessOrEqual:
-                                if (metric.Value <= alertRule.ThresholdValue)
-                                    await InitAlertEventAsync(metric, alertRule).ConfigureAwait(false);
+                                needToFireAlert = metric.Value <= alertRule.ThresholdValue;
                                 break;
                             default:
                                 throw new ArgumentOutOfRangeException();
+                        }
+
+                        if (needToFireAlert)
+                        {
+                            await ProcessAlertEventAsync(
+                                    metric,
+                                    alertRule,
+                                    true)
+                                .ConfigureAwait(false);
+                        }
+                        else if (_activeAlerts.Contains(alertRule.Id))
+                        {
+                            await ProcessAlertEventAsync(
+                                    metric,
+                                    alertRule,
+                                    false)
+                                .ConfigureAwait(false);
+                            _activeAlerts.Remove(alertRule.Id);
                         }
                     }
                 }
@@ -90,15 +107,33 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
             }
         }
 
-        private async Task InitAlertEventAsync(Metric metric, IAlertRule alertRule)
+        private async Task ProcessAlertEventAsync(
+            Metric metric,
+            IAlertRule alertRule,
+            bool isStarted)
         {
             var subscriptions = await _alertSubscriptionRepository.GetByAlertRuleAsync(alertRule.Id).ConfigureAwait(false);
             if (!subscriptions.Any())
                 return;
 
-            var message = GenerateAlerMessage(metric, alertRule);
+            _activeAlerts.Add(alertRule.Id);
+
+            var message = GenerateAlerMessage(
+                metric,
+                alertRule,
+                isStarted);
             foreach (var subscription in subscriptions)
             {
+                var alertSubKey = $"{metric.Name}_{subscription.Type}_{isStarted}";
+                var now = DateTime.UtcNow;
+                if (_lastAlertTimeDict.TryGetValue(alertSubKey, out var lastAlertTime))
+                {
+                    if (now - lastAlertTime < subscription.AlertFrequency)
+                        continue;
+                }
+
+                _lastAlertTimeDict[alertSubKey] = now;
+
                 await _alertNotifier.NotifyAsync(
                     subscription.Type,
                     subscription.SubscriptionData,
@@ -108,7 +143,10 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
             }
         }
 
-        private string GenerateAlerMessage(Metric metric, IAlertRule alertRule)
+        private string GenerateAlerMessage(
+            Metric metric,
+            IAlertRule alertRule,
+            bool isStarted)
         {
             string op;
             switch (alertRule.ComparisonType)
@@ -132,7 +170,9 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
                     throw new ArgumentOutOfRangeException();
             }
 
-            return $"Metric {metric.Name} has value {metric.Value} that is {op} threshold value {alertRule.ThresholdValue}";
+            return isStarted
+                ? $"Metric {metric.Name} has value {metric.Value} that is {op} threshold value {alertRule.ThresholdValue}"
+                : $"Alerting for metric {metric.Name} is off. Current value is {metric.Value} (threshold = {alertRule.ThresholdValue})";
         }
     }
 }
