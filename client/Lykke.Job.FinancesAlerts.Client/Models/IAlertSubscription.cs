@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Lykke.Job.FinancesAlerts.Domain
+namespace Lykke.Job.FinancesAlerts.Client.Models
 {
     public interface IAlertSubscription
     {
@@ -10,10 +10,10 @@ namespace Lykke.Job.FinancesAlerts.Domain
 
         AlertSubscriptionType Type { get; set; }
 
-        string SubscriptionData { get; set; }
+        string Address { get; set; }
 
         TimeSpan AlertFrequency { get; set; }
 
-        string Author { get; set; }
+        string ChangedBy { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Lykke.Job.FinancesAlerts.Domain
+﻿namespace Lykke.Job.FinancesAlerts.Client.Models
 {
     public interface IAlertRule
     {
@@ -10,6 +10,6 @@
 
         decimal ThresholdValue { get; set; }
 
-        string Author { get; set; }
+        string ChangedBy { get; set; }
     }
 }

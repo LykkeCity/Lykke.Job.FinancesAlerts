@@ -6,4 +6,7 @@
   <ItemGroup>
     <PackageReference Include="Lykke.Common" Version="7.3.1" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\client\Lykke.Job.FinancesAlerts.Client\Lykke.Job.FinancesAlerts.Client.csproj" />
+  </ItemGroup>
 </Project>

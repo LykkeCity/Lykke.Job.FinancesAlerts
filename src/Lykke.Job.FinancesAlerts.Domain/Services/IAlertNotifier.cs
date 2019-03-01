@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Lykke.Job.FinancesAlerts.Client.Models;
 
 namespace Lykke.Job.FinancesAlerts.Domain.Services
 {

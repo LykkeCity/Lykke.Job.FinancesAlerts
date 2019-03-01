@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Common.Log;
 using Lykke.Common.Log;
+using Lykke.Job.FinancesAlerts.Client.Models;
 using Lykke.Job.FinancesAlerts.Domain;
 using Lykke.Job.FinancesAlerts.Domain.Repositories;
 using Lykke.Job.FinancesAlerts.Domain.Services;
@@ -141,7 +142,7 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
 
                 await _alertNotifier.NotifyAsync(
                     subscription.Type,
-                    subscription.SubscriptionData,
+                    subscription.Address,
                     isStarted ? $"{metric.Name} alert" : $"{metric.Name} alerting is off",
                     message)
                     .ConfigureAwait(false);

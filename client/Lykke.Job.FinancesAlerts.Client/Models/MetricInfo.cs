@@ -1,4 +1,4 @@
-﻿namespace Lykke.Job.FinancesAlerts.Domain
+﻿namespace Lykke.Job.FinancesAlerts.Client.Models
 {
     public class MetricInfo
     {

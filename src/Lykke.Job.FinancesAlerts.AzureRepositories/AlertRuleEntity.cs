@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Globalization;
-using Lykke.Job.FinancesAlerts.Domain;
+using Lykke.Job.FinancesAlerts.Client.Models;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Lykke.Job.FinancesAlerts.AzureRepositories
@@ -11,7 +11,7 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
 
         public string MetricName { get; set; }
 
-        public string Author { get; set; }
+        public string ChangedBy { get; set; }
 
         [IgnoreProperty]
         public ComparisonType ComparisonType
@@ -40,6 +40,7 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
                 RowKey = id,
                 Id = id,
                 MetricName = alertRule.MetricName,
+                ChangedBy = alertRule.ChangedBy,
                 ComparisonTypeStr = alertRule.ComparisonType.ToString(),
                 ThresholdValueStr = alertRule.ThresholdValue.ToString(CultureInfo.InvariantCulture),
             };

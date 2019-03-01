@@ -30,11 +30,9 @@
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\client\Lykke.Job.FinancesAlerts.Client\Lykke.Job.FinancesAlerts.Client.csproj" />
     <ProjectReference Include="..\Lykke.Job.FinancesAlerts.AzureRepositories\Lykke.Job.FinancesAlerts.AzureRepositories.csproj" />
     <ProjectReference Include="..\Lykke.Job.FinancesAlerts.Domain\Lykke.Job.FinancesAlerts.Domain.csproj" />
     <ProjectReference Include="..\Lykke.Job.FinancesAlerts.DomainServices\Lykke.Job.FinancesAlerts.DomainServices.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controllers" />
   </ItemGroup>
 </Project>

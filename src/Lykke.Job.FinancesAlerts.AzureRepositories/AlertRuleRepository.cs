@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AzureStorage;
-using Lykke.Job.FinancesAlerts.Domain;
+using Lykke.Job.FinancesAlerts.Client.Models;
 using Lykke.Job.FinancesAlerts.Domain.Repositories;
 
 namespace Lykke.Job.FinancesAlerts.AzureRepositories
@@ -15,14 +15,26 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
             _storage = storage;
         }
 
-        public async Task AddAsync(IAlertRule alertRule)
+        public async Task<string> AddAsync(IAlertRule alertRule)
         {
-            await _storage.InsertAsync(AlertRuleEntity.Create(alertRule)).ConfigureAwait(false);
+            var alertRuleEntity = AlertRuleEntity.Create(alertRule);
+            await _storage.InsertAsync(alertRuleEntity).ConfigureAwait(false);
+            return alertRuleEntity.Id;
         }
 
-        public async Task RemoveAsync(string metricName, string alertRuleId)
+        public async Task UpdateAsync(IAlertRule alertRule)
+        {
+            await _storage.ReplaceAsync(AlertRuleEntity.Create(alertRule)).ConfigureAwait(false);
+        }
+
+        public async Task DeleteAsync(string metricName, string alertRuleId)
         {
             await _storage.DeleteAsync(AlertRuleEntity.GeneratePatitionKey(metricName), alertRuleId).ConfigureAwait(false);
+        }
+
+        public async Task<IAlertRule> GetAsync(string metricName, string id)
+        {
+            return await _storage.GetDataAsync(metricName, id).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<IAlertRule>> GetByMetricAsync(string metricName)

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Lykke.Job.FinancesAlerts.Domain
+namespace Lykke.Job.FinancesAlerts.Client.Models
 {
     [Flags]
     public enum ComparisonType : byte

@@ -1,4 +1,5 @@
 ﻿using System;
+using Lykke.Job.FinancesAlerts.Client.Models;
 using Lykke.Job.FinancesAlerts.Domain;
 using Microsoft.WindowsAzure.Storage.Table;
 
@@ -24,9 +25,9 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
             set => AlertFrequencyStr = value.ToString();
         }
 
-        public string SubscriptionData { get; set; }
+        public string Address { get; set; }
 
-        public string Author { get; set; }
+        public string ChangedBy { get; set; }
 
         public string TypeStr { get; set; }
         public string AlertFrequencyStr { get; set; }
@@ -41,8 +42,8 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
                 RowKey = id,
                 Id = id,
                 AlertRuleId = alertSubscription.AlertRuleId,
-                SubscriptionData = alertSubscription.SubscriptionData,
-                Author = alertSubscription.Author,
+                Address = alertSubscription.Address,
+                ChangedBy = alertSubscription.ChangedBy,
                 TypeStr = alertSubscription.Type.ToString(),
                 AlertFrequencyStr = alertSubscription.AlertFrequency.ToString(),
             };
