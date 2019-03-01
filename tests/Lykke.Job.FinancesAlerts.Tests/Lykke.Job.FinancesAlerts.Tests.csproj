@@ -12,4 +12,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\client\Lykke.Job.FinancesAlerts.Client\Lykke.Job.FinancesAlerts.Client.csproj" />
+  </ItemGroup>
 </Project>

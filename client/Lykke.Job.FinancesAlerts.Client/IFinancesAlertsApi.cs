@@ -12,24 +12,24 @@ namespace Lykke.Job.FinancesAlerts.Client
     public interface IFinancesAlertsApi
     {
         [Get("/api/alerts")]
-        Task<AlertRulesData> GetAlertRulesData();
+        Task<AlertRulesData> GetAlertRulesDataAsync();
 
         [Post("/api/alerts/addrule")]
-        Task<string> CreateAlertRule(CreateAlertRuleRequest request);
+        Task<string> CreateAlertRuleAsync(CreateAlertRuleRequest request);
 
         [Put("/api/alerts/updaterule")]
-        Task UpdateAlertRule(UpdateAlertRuleRequest request);
+        Task UpdateAlertRuleAsync(UpdateAlertRuleRequest request);
 
         [Delete("/api/alerts/deleterule")]
-        Task DeleteAlertRule(DeleteAlertRuleRequest request);
+        Task DeleteAlertRuleAsync(DeleteAlertRuleRequest request);
 
         [Post("/api/alerts/addsubscription")]
-        Task<string> CreateAlertSibscription(CreateAlertSibscriptionRequest request);
+        Task<string> CreateAlertSibscriptionAsync(CreateAlertSibscriptionRequest request);
 
         [Put("/api/alerts/updatesubscription")]
-        Task UpdateAlertSibscription(UpdateAlertSibscriptionRequest request);
+        Task UpdateAlertSubscriptionAsync(UpdateAlertSibscriptionRequest request);
 
         [Delete("/api/alerts/deletesubscription")]
-        Task DeleteAlertSibscription(DeleteAlertSibscriptionRequest request);
+        Task DeleteAlertSubscriptionAsync(DeleteAlertSibscriptionRequest request);
     }
 }

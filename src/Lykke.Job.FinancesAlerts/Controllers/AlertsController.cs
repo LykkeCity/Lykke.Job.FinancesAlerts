@@ -40,7 +40,7 @@ namespace Lykke.Job.FinancesAlerts.Controllers
         [Route("")]
         [SwaggerOperation("GetAlertRulesData")]
         [ProducesResponseType(typeof(AlertRulesData), (int)HttpStatusCode.OK)]
-        public async Task<AlertRulesData> GetAlertRulesData()
+        public async Task<AlertRulesData> GetAlertRulesDataAsync()
         {
             var metrics = _metricCalculatorRegistry.GetAvailableMetrics();
             var alertRules = new List<AlertRule>();
@@ -72,9 +72,9 @@ namespace Lykke.Job.FinancesAlerts.Controllers
         [SwaggerOperation("CreateAlertRule")]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public Task<string> CreateAlertRule([FromBody] CreateAlertRuleRequest request)
+        public Task<string> CreateAlertRuleAsync([FromBody] CreateAlertRuleRequest request)
         {
-            _log.Info(nameof(CreateAlertRule), request.ChangedBy, request);
+            _log.Info(nameof(CreateAlertRuleAsync), request.ChangedBy, request);
 
             return _alertRuleRepository.AddAsync(
                 new AlertRule
@@ -91,13 +91,13 @@ namespace Lykke.Job.FinancesAlerts.Controllers
         [SwaggerOperation("UpdateAlertRule")]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public async Task UpdateAlertRule([FromBody] UpdateAlertRuleRequest request)
+        public async Task UpdateAlertRuleAsync([FromBody] UpdateAlertRuleRequest request)
         {
             var existing = await _alertRuleRepository.GetAsync(request.MetricName, request.Id).ConfigureAwait(false);
             if (existing == null)
                 throw new ValidationApiException("Alert rule not found");
 
-            _log.Info(nameof(UpdateAlertRule), request.ChangedBy, request);
+            _log.Info(nameof(UpdateAlertRuleAsync), request.ChangedBy, request);
 
             await _alertRuleRepository.UpdateAsync(
                 new AlertRule
@@ -115,21 +115,21 @@ namespace Lykke.Job.FinancesAlerts.Controllers
         [SwaggerOperation("DeleteAlertRule")]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public Task DeleteAlertRule([FromBody] DeleteAlertRuleRequest request)
+        public Task DeleteAlertRuleAsync([FromBody] DeleteAlertRuleRequest request)
         {
-            _log.Info(nameof(DeleteAlertRule), request.ChangedBy, request);
+            _log.Info(nameof(DeleteAlertRuleAsync), request.ChangedBy, request);
 
             return _alertRuleRepository.DeleteAsync(request.MetricName, request.Id);
         }
 
         [HttpPost]
         [Route("addsubscription")]
-        [SwaggerOperation("CreateAlertSibscription")]
+        [SwaggerOperation("CreateAlertSubscription")]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public Task<string> CreateAlertSibscription([FromBody] CreateAlertSibscriptionRequest request)
+        public Task<string> CreateAlertSibscriptionAsync([FromBody] CreateAlertSibscriptionRequest request)
         {
-            _log.Info(nameof(CreateAlertSibscription), request.ChangedBy, request);
+            _log.Info(nameof(CreateAlertSibscriptionAsync), request.ChangedBy, request);
 
             return _alertSubscriptionRepository.AddAsync(
                 new AlertSubscription
@@ -144,16 +144,16 @@ namespace Lykke.Job.FinancesAlerts.Controllers
 
         [HttpPut]
         [Route("updatesubscription")]
-        [SwaggerOperation("UpdateAlertSibscription")]
+        [SwaggerOperation("UpdateAlertSubscription")]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public async Task UpdateAlertSibscription([FromBody] UpdateAlertSibscriptionRequest request)
+        public async Task UpdateAlertSubscriptionAsync([FromBody] UpdateAlertSibscriptionRequest request)
         {
             var existing = await _alertSubscriptionRepository.GetAsync(request.AlertRuleId, request.Id).ConfigureAwait(false);
             if (existing == null)
                 throw new ValidationApiException("Alert subscription not found");
 
-            _log.Info(nameof(UpdateAlertSibscription), request.ChangedBy, request);
+            _log.Info(nameof(UpdateAlertSubscriptionAsync), request.ChangedBy, request);
 
             await _alertSubscriptionRepository.UpdateAsync(
                 new AlertSubscription
@@ -169,12 +169,12 @@ namespace Lykke.Job.FinancesAlerts.Controllers
 
         [HttpDelete]
         [Route("deletesubscription")]
-        [SwaggerOperation("DeleteAlertSibscription")]
+        [SwaggerOperation("DeleteAlertSubscription")]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public Task DeleteAlertSibscription([FromBody] DeleteAlertSibscriptionRequest request)
+        public Task DeleteAlertSubscriptionAsync([FromBody] DeleteAlertSibscriptionRequest request)
         {
-            _log.Info(nameof(DeleteAlertSibscription), request.ChangedBy, request);
+            _log.Info(nameof(DeleteAlertSubscriptionAsync), request.ChangedBy, request);
 
             return _alertSubscriptionRepository.DeleteAsync(request.AlertRuleId, request.Id);
         }

@@ -2,6 +2,7 @@
 using Autofac;
 using JetBrains.Annotations;
 using Lykke.HttpClientGenerator;
+using Lykke.HttpClientGenerator.Infrastructure;
 
 namespace Lykke.Job.FinancesAlerts.Client
 {
@@ -30,7 +31,7 @@ namespace Lykke.Job.FinancesAlerts.Client
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(FinancesAlertsJobClientSettings.Url));
 
             var clientBuilder = HttpClientGenerator.HttpClientGenerator.BuildForUrl(settings.Url)
-                .WithAdditionalCallsWrapper(new ExceptionHandlerWrapper());
+                .WithAdditionalCallsWrapper(new ExceptionHandlerCallsWrapper());
 
             clientBuilder = builderConfigure?.Invoke(clientBuilder) ?? clientBuilder.WithoutRetries();
 
