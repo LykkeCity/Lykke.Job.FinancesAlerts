@@ -18,7 +18,7 @@ namespace Lykke.Job.FinancesAlerts.Client
         /// <param name="builder">Autofac container builder.</param>
         /// <param name="settings">LykkeService client settings.</param>
         /// <param name="builderConfigure">Optional <see cref="HttpClientGeneratorBuilder"/> configure handler.</param>
-        public static void RegisterLykkeServiceClient(
+        public static void RegisterFinancesAlertsClient(
             [NotNull] this ContainerBuilder builder,
             [NotNull] FinancesAlertsJobClientSettings settings,
             [CanBeNull] Func<HttpClientGeneratorBuilder, HttpClientGeneratorBuilder> builderConfigure)
