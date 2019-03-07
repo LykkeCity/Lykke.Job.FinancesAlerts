@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Lykke.Job.FinancesAlerts.Client.Models;
 using Refit;
@@ -24,7 +25,7 @@ namespace Lykke.Job.FinancesAlerts.Client
         Task DeleteAlertRuleAsync(DeleteAlertRuleRequest request);
 
         [Get("/api/subscriptions")]
-        Task<AlertRuleSubscriptionsData> GetAlertSubscriptionsDataAsync(string alertRuleId);
+        Task<List<AlertSubscription>> GetAlertSubscriptionsDataAsync(string alertRuleId);
 
         [Post("/api/alerts/addsubscription")]
         Task<string> CreateAlertSibscriptionAsync(CreateAlertSibscriptionRequest request);

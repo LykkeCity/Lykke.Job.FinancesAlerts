@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -63,7 +62,6 @@ namespace Lykke.Job.FinancesAlerts.Controllers
             {
                 AlertRules = alertRules,
                 Metrics = metrics,
-                ComparisonTypes = Enum.GetValues(typeof(ComparisonType)).Cast<ComparisonType>().ToList(),
             };
         }
 
@@ -125,16 +123,11 @@ namespace Lykke.Job.FinancesAlerts.Controllers
         [HttpGet]
         [Route("subscriptions")]
         [SwaggerOperation("GetAlertSubscriptionsData")]
-        [ProducesResponseType(typeof(AlertRuleSubscriptionsData), (int)HttpStatusCode.OK)]
-        public async Task<AlertRuleSubscriptionsData> GetAlertSubscriptionsDataAsync(string alertRuleId)
+        [ProducesResponseType(typeof(List<AlertSubscription>), (int)HttpStatusCode.OK)]
+        public async Task<List<AlertSubscription>> GetAlertSubscriptionsDataAsync(string alertRuleId)
         {
             var subscriptions = await _alertSubscriptionRepository.GetByAlertRuleAsync(alertRuleId).ConfigureAwait(false);
-            return new AlertRuleSubscriptionsData
-            {
-                AlertRuleId = alertRuleId,
-                Subscriptions = subscriptions.Select(AlertSubscription.Copy).ToList(),
-                SubscriptionTypes = Enum.GetValues(typeof(AlertSubscriptionType)).Cast<AlertSubscriptionType>().ToList(),
-            };
+            return subscriptions.Select(AlertSubscription.Copy).ToList();
         }
 
         [HttpPost]

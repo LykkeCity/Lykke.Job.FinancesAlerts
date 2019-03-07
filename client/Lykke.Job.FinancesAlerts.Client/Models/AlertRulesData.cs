@@ -7,7 +7,5 @@ namespace Lykke.Job.FinancesAlerts.Client.Models
         public List<AlertRule> AlertRules { get; set; }
 
         public List<MetricInfo> Metrics { get; set; }
-
-        public List<ComparisonType> ComparisonTypes { get; set; }
     }
 }
