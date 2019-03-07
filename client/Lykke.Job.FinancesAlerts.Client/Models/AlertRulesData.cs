@@ -8,6 +8,6 @@ namespace Lykke.Job.FinancesAlerts.Client.Models
 
         public List<MetricInfo> Metrics { get; set; }
 
-        public List<string> ComparisonTypes { get; set; }
+        public List<ComparisonType> ComparisonTypes { get; set; }
     }
 }

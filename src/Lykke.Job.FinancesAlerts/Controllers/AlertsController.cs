@@ -54,7 +54,7 @@ namespace Lykke.Job.FinancesAlerts.Controllers
                         continue;
 
                     var alertRule = AlertRule.Copy(metricAlertRule);
-                    alertRule.Subscriptions = subscriptions.Select(AlertSubscription.Copy).ToList();
+                    alertRule.SubscriptionsCount = subscriptions.Count();
                     alertRules.Add(alertRule);
                 }
             }
@@ -63,7 +63,7 @@ namespace Lykke.Job.FinancesAlerts.Controllers
             {
                 AlertRules = alertRules,
                 Metrics = metrics,
-                ComparisonTypes = Enum.GetNames(typeof(ComparisonType)).ToList(),
+                ComparisonTypes = Enum.GetValues(typeof(ComparisonType)).Cast<ComparisonType>().ToList(),
             };
         }
 
@@ -120,6 +120,21 @@ namespace Lykke.Job.FinancesAlerts.Controllers
             _log.Info(nameof(DeleteAlertRuleAsync), request.ChangedBy, request);
 
             return _alertRuleRepository.DeleteAsync(request.MetricName, request.Id);
+        }
+
+        [HttpGet]
+        [Route("subscriptions")]
+        [SwaggerOperation("GetAlertSubscriptionsData")]
+        [ProducesResponseType(typeof(AlertRuleSubscriptionsData), (int)HttpStatusCode.OK)]
+        public async Task<AlertRuleSubscriptionsData> GetAlertSubscriptionsDataAsync(string alertRuleId)
+        {
+            var subscriptions = await _alertSubscriptionRepository.GetByAlertRuleAsync(alertRuleId).ConfigureAwait(false);
+            return new AlertRuleSubscriptionsData
+            {
+                AlertRuleId = alertRuleId,
+                Subscriptions = subscriptions.Select(AlertSubscription.Copy).ToList(),
+                SubscriptionTypes = Enum.GetValues(typeof(AlertSubscriptionType)).Cast<AlertSubscriptionType>().ToList(),
+            };
         }
 
         [HttpPost]

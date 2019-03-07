@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Lykke.Job.FinancesAlerts.Client.Models
+﻿namespace Lykke.Job.FinancesAlerts.Client.Models
 {
     public class AlertRule : IAlertRule
     {
@@ -10,7 +8,7 @@ namespace Lykke.Job.FinancesAlerts.Client.Models
         public decimal ThresholdValue { get; set; }
         public string ChangedBy { get; set; }
 
-        public List<AlertSubscription> Subscriptions { get; set; }
+        public int SubscriptionsCount { get; set; }
 
         public static AlertRule Copy(IAlertRule alertRule)
         {
