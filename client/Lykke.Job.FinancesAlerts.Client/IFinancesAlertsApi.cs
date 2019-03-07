@@ -24,7 +24,7 @@ namespace Lykke.Job.FinancesAlerts.Client
         [Delete("/api/alerts/deleterule")]
         Task DeleteAlertRuleAsync(DeleteAlertRuleRequest request);
 
-        [Get("/api/subscriptions")]
+        [Get("/api/alerts/subscriptions")]
         Task<List<AlertSubscription>> GetAlertSubscriptionsDataAsync(string alertRuleId);
 
         [Post("/api/alerts/addsubscription")]
