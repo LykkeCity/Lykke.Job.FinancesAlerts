@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Lykke.Job.FinancesAlerts.Client.Models;
 using Refit;
@@ -7,7 +6,7 @@ using Refit;
 namespace Lykke.Job.FinancesAlerts.Client
 {
     /// <summary>
-    /// FinancesAlerts client API interface.
+    /// Finances alerts client API interface.
     /// </summary>
     [PublicAPI]
     public interface IFinancesAlertsApi
@@ -15,25 +14,16 @@ namespace Lykke.Job.FinancesAlerts.Client
         [Get("/api/alerts")]
         Task<AlertRulesData> GetAlertRulesDataAsync();
 
-        [Post("/api/alerts/addrule")]
+        [Get("/api/alerts/{metricName}/{alertRuleId}")]
+        Task<AlertRule> GetAlertRuleByIdAsync(string metricName, string alertRuleId);
+
+        [Post("/api/alerts")]
         Task<string> CreateAlertRuleAsync(CreateAlertRuleRequest request);
 
-        [Put("/api/alerts/updaterule")]
+        [Put("/api/alerts")]
         Task UpdateAlertRuleAsync(UpdateAlertRuleRequest request);
 
-        [Delete("/api/alerts/deleterule")]
+        [Delete("/api/alerts")]
         Task DeleteAlertRuleAsync(DeleteAlertRuleRequest request);
-
-        [Get("/api/alerts/subscriptions")]
-        Task<List<AlertSubscription>> GetAlertSubscriptionsDataAsync(string alertRuleId);
-
-        [Post("/api/alerts/addsubscription")]
-        Task<string> CreateAlertSibscriptionAsync(CreateAlertSibscriptionRequest request);
-
-        [Put("/api/alerts/updatesubscription")]
-        Task UpdateAlertSubscriptionAsync(UpdateAlertSibscriptionRequest request);
-
-        [Delete("/api/alerts/deletesubscription")]
-        Task DeleteAlertSubscriptionAsync(DeleteAlertSibscriptionRequest request);
     }
 }

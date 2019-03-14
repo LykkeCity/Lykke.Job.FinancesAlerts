@@ -51,7 +51,7 @@ namespace Lykke.Job.FinancesAlerts.DomainServices.MetricCalculators
                 TimeSpan.FromSeconds(60),
                 _logFactory);
 
-            await _privateCfWsClient.Start().ConfigureAwait(false);
+            await _privateCfWsClient.Start();
         }
 
         public async Task StopAsync()

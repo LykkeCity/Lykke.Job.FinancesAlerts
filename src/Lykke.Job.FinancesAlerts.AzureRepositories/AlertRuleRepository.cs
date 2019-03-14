@@ -18,28 +18,28 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
         public async Task<string> AddAsync(IAlertRule alertRule)
         {
             var alertRuleEntity = AlertRuleEntity.Create(alertRule);
-            await _storage.InsertAsync(alertRuleEntity).ConfigureAwait(false);
+            await _storage.InsertAsync(alertRuleEntity);
             return alertRuleEntity.Id;
         }
 
         public async Task UpdateAsync(IAlertRule alertRule)
         {
-            await _storage.ReplaceAsync(AlertRuleEntity.Create(alertRule)).ConfigureAwait(false);
+            await _storage.ReplaceAsync(AlertRuleEntity.Create(alertRule));
         }
 
         public async Task DeleteAsync(string metricName, string alertRuleId)
         {
-            await _storage.DeleteAsync(AlertRuleEntity.GeneratePatitionKey(metricName), alertRuleId).ConfigureAwait(false);
+            await _storage.DeleteAsync(AlertRuleEntity.GeneratePatitionKey(metricName), alertRuleId);
         }
 
         public async Task<IAlertRule> GetAsync(string metricName, string id)
         {
-            return await _storage.GetDataAsync(metricName, id).ConfigureAwait(false);
+            return await _storage.GetDataAsync(metricName, id);
         }
 
         public async Task<IEnumerable<IAlertRule>> GetByMetricAsync(string metricName)
         {
-            return await _storage.GetDataAsync(metricName).ConfigureAwait(false);
+            return await _storage.GetDataAsync(metricName);
         }
     }
 }

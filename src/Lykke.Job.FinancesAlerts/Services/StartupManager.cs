@@ -20,7 +20,7 @@ namespace Lykke.Job.FinancesAlerts.Services
 
         public async Task StartAsync()
         {
-            await _metricCalculatorRegistry.StartAsync().ConfigureAwait(false);
+            await _metricCalculatorRegistry.StartAsync();
 
             _mainTimer.Start();
         }

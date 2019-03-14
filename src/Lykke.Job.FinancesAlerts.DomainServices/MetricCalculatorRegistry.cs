@@ -22,7 +22,7 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
         {
             foreach (var calculator in _calculators.Values)
             {
-                await calculator.StartAsync().ConfigureAwait(false);
+                await calculator.StartAsync();
             }
         }
 
@@ -30,7 +30,7 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
         {
             foreach (var calculator in _calculators.Values)
             {
-                await calculator.StopAsync().ConfigureAwait(false);
+                await calculator.StopAsync();
             }
         }
 

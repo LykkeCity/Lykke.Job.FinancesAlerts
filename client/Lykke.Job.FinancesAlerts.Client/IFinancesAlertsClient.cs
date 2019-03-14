@@ -8,7 +8,10 @@ namespace Lykke.Job.FinancesAlerts.Client
     [PublicAPI]
     public interface IFinancesAlertsClient
     {
+        /// <summary>Alerts Api interface</summary>
+        IFinancesAlertsApi AlertsApi { get; }
+
         /// <summary>Application Api interface</summary>
-        IFinancesAlertsApi Api { get; }
+        IFinancesAlertSubscriptionsApi AlertSubscriptionsApi { get; }
     }
 }

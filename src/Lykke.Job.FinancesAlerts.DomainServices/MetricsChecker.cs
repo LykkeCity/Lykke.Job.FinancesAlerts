@@ -39,7 +39,7 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
         {
             var metricCalculators = _metricCalculatorRegistry.GetAllMetricCalculators();
 
-            await Task.WhenAll(metricCalculators.Select(CheckMetricAsync)).ConfigureAwait(false);
+            await Task.WhenAll(metricCalculators.Select(CheckMetricAsync));
         }
 
         private async Task CheckMetricAsync(IMetricCalculator metricCalculator)
@@ -51,7 +51,7 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
                 var calculationTask = metricCalculator.CalculateMetricsAsync();
                 var rulesFetchingTask = _alertRuleRepository.GetByMetricAsync(metricInfo.Name);
 
-                await Task.WhenAll(calculationTask, rulesFetchingTask).ConfigureAwait(false);
+                await Task.WhenAll(calculationTask, rulesFetchingTask);
 
                 var alertRules = rulesFetchingTask.Result;
                 var metrics = calculationTask.Result;
@@ -88,7 +88,7 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
                                     metric,
                                     alertRule,
                                     true)
-                                .ConfigureAwait(false);
+                                ;
                         }
                         else
                         {
@@ -99,7 +99,7 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
                                         metric,
                                         alertRule,
                                         false)
-                                    .ConfigureAwait(false);
+                                    ;
                                 _activeAlerts.Remove(activeMetricRuleKey);
                             }
                         }
@@ -117,7 +117,7 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
             IAlertRule alertRule,
             bool isStarted)
         {
-            var subscriptions = await _alertSubscriptionRepository.GetByAlertRuleAsync(alertRule.Id).ConfigureAwait(false);
+            var subscriptions = await _alertSubscriptionRepository.GetByAlertRuleAsync(alertRule.Id);
             if (!subscriptions.Any())
                 return;
 
@@ -145,7 +145,7 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
                     subscription.Address,
                     isStarted ? $"{metric.Name} alert" : $"{metric.Name} alerting is off",
                     message)
-                    .ConfigureAwait(false);
+                    ;
             }
         }
 

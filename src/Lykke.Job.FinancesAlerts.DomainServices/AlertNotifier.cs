@@ -39,10 +39,10 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
                 switch (subscriptionType)
                 {
                     case AlertSubscriptionType.Email:
-                        await NotifyViaEmailAsync(address, topic, message).ConfigureAwait(false);
+                        await NotifyViaEmailAsync(address, topic, message);
                         break;
                     case AlertSubscriptionType.Sms:
-                        await NotifyViaSmsAsync(address, topic, message).ConfigureAwait(false);
+                        await NotifyViaSmsAsync(address, topic, message);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(subscriptionType), subscriptionType, null);
@@ -61,7 +61,7 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
         {
             _log.Info(topic, message, address.SanitizePhone());
 
-            await _smsSenderClient.SendSmsAsync(address, $"{topic} : {message}").ConfigureAwait(false);
+            await _smsSenderClient.SendSmsAsync(address, $"{topic} : {message}");
         }
 
         private async Task NotifyViaEmailAsync(
@@ -82,7 +82,7 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
                 {
                     EmailAddress = address
                 })
-                .ConfigureAwait(false);
+                ;
         }
     }
 }

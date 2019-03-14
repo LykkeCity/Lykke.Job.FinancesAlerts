@@ -39,7 +39,7 @@ namespace Lykke.Job.FinancesAlerts.Services
                 }
             }
 
-            await _metricCalculatorRegistry.StopAsync().ConfigureAwait(false);
+            await _metricCalculatorRegistry.StopAsync();
         }
     }
 }

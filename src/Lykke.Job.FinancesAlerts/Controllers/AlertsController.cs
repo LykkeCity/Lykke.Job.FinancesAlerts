@@ -35,8 +35,7 @@ namespace Lykke.Job.FinancesAlerts.Controllers
             _metricCalculatorRegistry = metricCalculatorRegistry;
         }
 
-        [HttpGet]
-        [Route("")]
+        [HttpGet("")]
         [SwaggerOperation("GetAlertRulesData")]
         [ProducesResponseType(typeof(AlertRulesData), (int)HttpStatusCode.OK)]
         public async Task<AlertRulesData> GetAlertRulesDataAsync()
@@ -45,10 +44,10 @@ namespace Lykke.Job.FinancesAlerts.Controllers
             var alertRules = new List<AlertRule>();
             foreach (var metric in metrics)
             {
-                var metricAlertRules = await _alertRuleRepository.GetByMetricAsync(metric.Name).ConfigureAwait(false);
+                var metricAlertRules = await _alertRuleRepository.GetByMetricAsync(metric.Name);
                 foreach (var metricAlertRule in metricAlertRules)
                 {
-                    var subscriptions = await _alertSubscriptionRepository.GetByAlertRuleAsync(metricAlertRule.Id).ConfigureAwait(false);
+                    var subscriptions = await _alertSubscriptionRepository.GetByAlertRuleAsync(metricAlertRule.Id);
                     if (!subscriptions.Any())
                         continue;
 
@@ -65,8 +64,16 @@ namespace Lykke.Job.FinancesAlerts.Controllers
             };
         }
 
-        [HttpPost]
-        [Route("addrule")]
+        [HttpGet("{metricName}/{alertRuleId}")]
+        [SwaggerOperation("GetAlertRuleById")]
+        [ProducesResponseType(typeof(AlertRule), (int) HttpStatusCode.OK)]
+        public async Task<AlertRule> GetAlertRuleByIdAsync(string metricName, string alertRuleId)
+        {
+            var alertRule = await _alertRuleRepository.GetAsync(metricName, alertRuleId);
+            return AlertRule.Copy(alertRule);
+        }
+
+        [HttpPost("")]
         [SwaggerOperation("CreateAlertRule")]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
@@ -84,14 +91,13 @@ namespace Lykke.Job.FinancesAlerts.Controllers
                 });
         }
 
-        [HttpPut]
-        [Route("updaterule")]
+        [HttpPut("")]
         [SwaggerOperation("UpdateAlertRule")]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         public async Task UpdateAlertRuleAsync([FromBody] UpdateAlertRuleRequest request)
         {
-            var existing = await _alertRuleRepository.GetAsync(request.MetricName, request.Id).ConfigureAwait(false);
+            var existing = await _alertRuleRepository.GetAsync(request.MetricName, request.Id);
             if (existing == null)
                 throw new ValidationApiException("Alert rule not found");
 
@@ -105,11 +111,10 @@ namespace Lykke.Job.FinancesAlerts.Controllers
                     ComparisonType = request.ComparisonType,
                     ThresholdValue = request.ThresholdValue,
                     ChangedBy = request.ChangedBy,
-                }).ConfigureAwait(false);
+                });
         }
 
-        [HttpDelete]
-        [Route("deleterule")]
+        [HttpDelete("")]
         [SwaggerOperation("DeleteAlertRule")]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
@@ -118,73 +123,6 @@ namespace Lykke.Job.FinancesAlerts.Controllers
             _log.Info(nameof(DeleteAlertRuleAsync), request.ChangedBy, request);
 
             return _alertRuleRepository.DeleteAsync(request.MetricName, request.Id);
-        }
-
-        [HttpGet]
-        [Route("subscriptions")]
-        [SwaggerOperation("GetAlertSubscriptionsData")]
-        [ProducesResponseType(typeof(List<AlertSubscription>), (int)HttpStatusCode.OK)]
-        public async Task<List<AlertSubscription>> GetAlertSubscriptionsDataAsync(string alertRuleId)
-        {
-            var subscriptions = await _alertSubscriptionRepository.GetByAlertRuleAsync(alertRuleId).ConfigureAwait(false);
-            return subscriptions.Select(AlertSubscription.Copy).ToList();
-        }
-
-        [HttpPost]
-        [Route("addsubscription")]
-        [SwaggerOperation("CreateAlertSubscription")]
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public Task<string> CreateAlertSibscriptionAsync([FromBody] CreateAlertSibscriptionRequest request)
-        {
-            _log.Info(nameof(CreateAlertSibscriptionAsync), request.ChangedBy, request);
-
-            return _alertSubscriptionRepository.AddAsync(
-                new AlertSubscription
-                {
-                    AlertRuleId = request.AlertRuleId,
-                    Address = request.Address,
-                    Type = request.Type,
-                    AlertFrequency = request.AlertFrequency,
-                    ChangedBy = request.ChangedBy,
-                });
-        }
-
-        [HttpPut]
-        [Route("updatesubscription")]
-        [SwaggerOperation("UpdateAlertSubscription")]
-        [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public async Task UpdateAlertSubscriptionAsync([FromBody] UpdateAlertSibscriptionRequest request)
-        {
-            var existing = await _alertSubscriptionRepository.GetAsync(request.AlertRuleId, request.Id).ConfigureAwait(false);
-            if (existing == null)
-                throw new ValidationApiException("Alert subscription not found");
-
-            _log.Info(nameof(UpdateAlertSubscriptionAsync), request.ChangedBy, request);
-
-            await _alertSubscriptionRepository.UpdateAsync(
-                new AlertSubscription
-                {
-                    Id = request.Id,
-                    AlertRuleId = request.AlertRuleId,
-                    Address = request.Address,
-                    Type = request.Type,
-                    AlertFrequency = request.AlertFrequency,
-                    ChangedBy = request.ChangedBy,
-                }).ConfigureAwait(false);
-        }
-
-        [HttpDelete]
-        [Route("deletesubscription")]
-        [SwaggerOperation("DeleteAlertSubscription")]
-        [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public Task DeleteAlertSubscriptionAsync([FromBody] DeleteAlertSibscriptionRequest request)
-        {
-            _log.Info(nameof(DeleteAlertSubscriptionAsync), request.ChangedBy, request);
-
-            return _alertSubscriptionRepository.DeleteAsync(request.AlertRuleId, request.Id);
         }
     }
 }
