@@ -48,9 +48,6 @@ namespace Lykke.Job.FinancesAlerts.Controllers
                 foreach (var metricAlertRule in metricAlertRules)
                 {
                     var subscriptions = await _alertSubscriptionRepository.GetByAlertRuleAsync(metricAlertRule.Id);
-                    if (!subscriptions.Any())
-                        continue;
-
                     var alertRule = AlertRule.Copy(metricAlertRule);
                     alertRule.SubscriptionsCount = subscriptions.Count();
                     alertRules.Add(alertRule);
