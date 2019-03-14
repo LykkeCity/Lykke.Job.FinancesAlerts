@@ -64,6 +64,14 @@ namespace Lykke.Job.FinancesAlerts.Controllers
             };
         }
 
+        [HttpGet("metrics")]
+        [SwaggerOperation("GetAlertRulesMetrics")]
+        [ProducesResponseType(typeof(List<MetricInfo>), (int)HttpStatusCode.OK)]
+        public Task<List<MetricInfo>> GetAlertRulesMetricsAsync()
+        {
+            return Task.FromResult(_metricCalculatorRegistry.GetAvailableMetrics());
+        }
+
         [HttpGet("{metricName}/{alertRuleId}")]
         [SwaggerOperation("GetAlertRuleById")]
         [ProducesResponseType(typeof(AlertRule), (int) HttpStatusCode.OK)]

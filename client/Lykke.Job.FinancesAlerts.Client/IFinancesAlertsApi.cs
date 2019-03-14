@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Lykke.Job.FinancesAlerts.Client.Models;
 using Refit;
@@ -13,6 +14,9 @@ namespace Lykke.Job.FinancesAlerts.Client
     {
         [Get("/api/alerts")]
         Task<AlertRulesData> GetAlertRulesDataAsync();
+
+        [Get("/api/alerts/metrics")]
+        Task<List<MetricInfo>> GetAlertRulesMetricsAsync();
 
         [Get("/api/alerts/{metricName}/{alertRuleId}")]
         Task<AlertRule> GetAlertRuleByIdAsync(string metricName, string alertRuleId);
