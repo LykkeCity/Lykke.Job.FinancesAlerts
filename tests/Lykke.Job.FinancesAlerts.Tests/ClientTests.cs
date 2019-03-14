@@ -23,7 +23,7 @@ namespace Lykke.Job.FinancesAlerts.Tests
         public async Task AddRuleValidationChecks()
         {
             await Assert.ThrowsAsync<ClientApiException>(async () =>
-                await _client.Api.CreateAlertRuleAsync(new CreateAlertRuleRequest()));
+                await _client.AlertsApi.CreateAlertRuleAsync(new CreateAlertRuleRequest()));
 
         }
     }
