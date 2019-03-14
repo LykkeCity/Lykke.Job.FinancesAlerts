@@ -123,7 +123,7 @@ namespace Lykke.Job.FinancesAlerts.Controllers
         [SwaggerOperation("DeleteAlertRule")]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public Task DeleteAlertRuleAsync([FromBody] DeleteAlertRuleRequest request)
+        public Task DeleteAlertRuleAsync(DeleteAlertRuleRequest request)
         {
             _log.Info(nameof(DeleteAlertRuleAsync), request.ChangedBy, request);
 

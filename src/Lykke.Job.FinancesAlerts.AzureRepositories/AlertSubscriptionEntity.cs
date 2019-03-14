@@ -1,6 +1,5 @@
 ﻿using System;
 using Lykke.Job.FinancesAlerts.Client.Models;
-using Lykke.Job.FinancesAlerts.Domain;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Lykke.Job.FinancesAlerts.AzureRepositories
@@ -39,7 +38,7 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
             return new AlertSubscriptionEntity
             {
                 PartitionKey = GeneratePatitionKey(alertSubscription.AlertRuleId),
-                RowKey = id,
+                RowKey = GenerateRowKey(id),
                 Id = id,
                 AlertRuleId = alertSubscription.AlertRuleId,
                 Address = alertSubscription.Address,
@@ -52,6 +51,11 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
         internal static string GeneratePatitionKey(string alertRuleId)
         {
             return alertRuleId;
+        }
+
+        internal static string GenerateRowKey(string id)
+        {
+            return id;
         }
     }
 }

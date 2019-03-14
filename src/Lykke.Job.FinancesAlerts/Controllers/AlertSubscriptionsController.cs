@@ -91,7 +91,7 @@ namespace Lykke.Job.FinancesAlerts.Controllers
         [SwaggerOperation("DeleteAlertSubscription")]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public Task DeleteAlertSubscriptionAsync([FromBody] DeleteAlertSibscriptionRequest request)
+        public Task DeleteAlertSubscriptionAsync(DeleteAlertSibscriptionRequest request)
         {
             _log.Info(nameof(DeleteAlertSubscriptionAsync), request.ChangedBy, request);
 

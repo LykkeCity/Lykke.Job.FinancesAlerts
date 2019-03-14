@@ -37,7 +37,7 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
             return new AlertRuleEntity
             {
                 PartitionKey = GeneratePatitionKey(alertRule.MetricName),
-                RowKey = id,
+                RowKey = GenerateRowKey(id),
                 Id = id,
                 MetricName = alertRule.MetricName,
                 ChangedBy = alertRule.ChangedBy,
@@ -49,6 +49,11 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
         internal static string GeneratePatitionKey(string metricName)
         {
             return metricName;
+        }
+
+        internal static string GenerateRowKey(string id)
+        {
+            return id;
         }
     }
 }

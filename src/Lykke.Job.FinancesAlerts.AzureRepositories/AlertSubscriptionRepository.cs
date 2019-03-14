@@ -24,7 +24,16 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
 
         public async Task UpdateAsync(IAlertSubscription alertSubscription)
         {
-            await _storage.ReplaceAsync(AlertSubscriptionEntity.Create(alertSubscription));
+            await _storage.MergeAsync(
+                AlertSubscriptionEntity.GeneratePatitionKey(alertSubscription.AlertRuleId),
+                AlertSubscriptionEntity.GenerateRowKey(alertSubscription.Id),
+                i =>
+                {
+                    i.AlertFrequency = alertSubscription.AlertFrequency;
+                    i.Type = alertSubscription.Type;
+                    i.Address = alertSubscription.Address;
+                    return i;
+                });
         }
 
         public async Task DeleteAsync(string alertRuleId, string alertSubscriptionId)
