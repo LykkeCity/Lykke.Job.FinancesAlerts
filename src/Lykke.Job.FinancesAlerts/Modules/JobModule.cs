@@ -63,6 +63,11 @@ namespace Lykke.Job.FinancesAlerts.Modules
                 .As<IMetricCalculatorRegistry>()
                 .SingleInstance();
 
+            builder.RegisterType<SqlAdapter>()
+                .As<ISqlAdapter>()
+                .SingleInstance()
+                .WithParameter(TypedParameter.From(_settings.FinancesAlertsJob.Db.SqlConnString));
+
             RegisterAzureRepositories(builder);
 
             RegisterNotificationComponents(builder);
@@ -72,7 +77,12 @@ namespace Lykke.Job.FinancesAlerts.Modules
 
         private void RegisterMetricCalculators(ContainerBuilder builder)
         {
-            builder.RegisterType<FuturesLiqPriceRangeMetricCalculator>()
+            builder.RegisterType<CfFuturesLiqPriceRangeMetricCalculator>()
+                .As<IMetricCalculator>()
+                .SingleInstance()
+                .WithParameter(TypedParameter.From(_settings.FinancesAlertsJob.CryptoFacilities));
+
+            builder.RegisterType<CfCoinMarginMetricsCalculator>()
                 .As<IMetricCalculator>()
                 .SingleInstance()
                 .WithParameter(TypedParameter.From(_settings.FinancesAlertsJob.CryptoFacilities));

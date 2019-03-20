@@ -151,12 +151,12 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
 
         private string GenerateActiveMetricRuleKey(Metric metric, IAlertRule alertRule)
         {
-            return $"{alertRule.Id}_{metric.Info}";
+            return $"{alertRule.Id}_{metric.Instrument}";
         }
 
         private string GenerateActiveSubscriptionKey(Metric metric, IAlertSubscription subscription, bool isStarted)
         {
-            return $"{metric.Name}_{metric.Info}_{subscription.Type}_{isStarted}";
+            return $"{metric.Name}_{metric.Instrument}_{subscription.Type}_{isStarted}";
         }
 
         private string GenerateAlerMessage(
@@ -186,9 +186,9 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
                     throw new ArgumentOutOfRangeException();
             }
 
-            var metricName = string.IsNullOrWhiteSpace(metric.Info)
+            var metricName = string.IsNullOrWhiteSpace(metric.Instrument)
                 ? metric.Name
-                : $"{metric.Name} for {metric.Info}";
+                : $"{metric.Name} for {metric.Instrument}";
 
             return isStarted
                 ? $"Metric {metricName} has value {metric.Value} that is {op} threshold value {alertRule.ThresholdValue}"

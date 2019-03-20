@@ -8,6 +8,8 @@ FinancesAlertsJob:
             settings-key: FinancesAlertsJob-DataConnString
             types:
             - AzureTableStorage
+        SqlConnString:
+            settings-key: FinancesAlertsJob-SqlConnString
     CryptoFacilities:
         ApiPath:
             settings-key: FinancesAlertsJob-CfApiPath

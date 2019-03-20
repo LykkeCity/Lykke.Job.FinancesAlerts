@@ -13,7 +13,7 @@ using Lykke.Job.FinancesAlerts.Domain.Services;
 
 namespace Lykke.Job.FinancesAlerts.DomainServices.MetricCalculators
 {
-    public class FuturesLiqPriceRangeMetricCalculator : IMetricCalculator
+    public class CfFuturesLiqPriceRangeMetricCalculator : IMetricCalculator
     {
         private readonly ILogFactory _logFactory;
         private readonly CryptoFacilitiesApiSettings _cryptoFacilitiesApiSettings;
@@ -23,15 +23,15 @@ namespace Lykke.Job.FinancesAlerts.DomainServices.MetricCalculators
 
         public MetricInfo MetricInfo { get; }
 
-        public FuturesLiqPriceRangeMetricCalculator(ILogFactory logFactory, CryptoFacilitiesApiSettings cryptoFacilitiesApiSettings)
+        public CfFuturesLiqPriceRangeMetricCalculator(ILogFactory logFactory, CryptoFacilitiesApiSettings cryptoFacilitiesApiSettings)
         {
             _logFactory = logFactory;
             _cryptoFacilitiesApiSettings = cryptoFacilitiesApiSettings;
 
             MetricInfo = new MetricInfo
             {
-                Name = "FuturesLiqPriceDiffPercent",
-                Description = "Calculates futures contract liquidation price diff angainst its market price in percents",
+                Name = "CfFuturesLiqPriceDiffPercent",
+                Description = "Calculates futures contract liquidation price diff angainst its market price in percents for CryptoFacilities",
                 Accuracy = 0,
             };
         }
@@ -39,7 +39,7 @@ namespace Lykke.Job.FinancesAlerts.DomainServices.MetricCalculators
         public async Task StartAsync()
         {
             if (_privateCfWsClient != null)
-                throw new InvalidOperationException($"{nameof(FuturesLiqPriceRangeMetricCalculator)} is already started");
+                throw new InvalidOperationException($"{nameof(CfFuturesLiqPriceRangeMetricCalculator)} is already started");
 
             _privateCfWsClient = new PrivateCryptoFacilitiesConnection<OpenPositionsMessage, OpenPositionsMessage>(
                 _cryptoFacilitiesApiSettings.ApiPath,
@@ -75,7 +75,7 @@ namespace Lykke.Job.FinancesAlerts.DomainServices.MetricCalculators
                 {
                     Name = MetricInfo.Name,
                     Value = p.Value,
-                    Info = p.Key,
+                    Instrument = p.Key,
                 })
                 .ToList();
 
