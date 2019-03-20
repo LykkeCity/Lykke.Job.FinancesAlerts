@@ -10,7 +10,7 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
 
         public SqlAdapter(string sqlConnString)
         {
-            _sqlConnString = sqlConnString
+            _sqlConnString = sqlConnString;
         }
 
         public DataSet GetDataFromTableOrView(string table)
