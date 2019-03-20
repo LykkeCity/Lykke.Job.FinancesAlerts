@@ -9,5 +9,8 @@ namespace Lykke.Job.FinancesAlerts.Settings.JobSettings
 
         [AzureTableCheck]
         public string DataConnString { get; set; }
+
+        [SqlCheck]
+        public string SqlConnString { get; set; }
     }
 }
