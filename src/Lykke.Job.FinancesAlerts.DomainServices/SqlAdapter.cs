@@ -21,7 +21,7 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
                 command.CommandTimeout = 600;
                 connection.Open();
                 command.CommandText = $"SELECT * FROM {table}";
-                command.CommandType = CommandType.StoredProcedure;
+                command.CommandType = CommandType.Text;
                 var dataAdapter = new SqlDataAdapter(command);
                 var result = new DataSet();
                 dataAdapter.Fill(result);

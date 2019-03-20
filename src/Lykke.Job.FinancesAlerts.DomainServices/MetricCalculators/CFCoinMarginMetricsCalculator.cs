@@ -46,9 +46,14 @@ namespace Lykke.Job.FinancesAlerts.DomainServices.MetricCalculators
             {
                 var dataset = _sqlAdapter.GetDataFromTableOrView(DataSourceView);
                 var table = dataset.Tables[0];
-                var result = new List<Metric>();
                 var assetColumnInd = table.Columns.IndexOf(AssetColumnName);
+                if (assetColumnInd == -1)
+                    throw new InvalidOperationException($"Column {AssetColumnName} is not found among columns {GetColumnNamesString(table.Columns)}");
                 var metricColumnInd = table.Columns.IndexOf(MetricColumnName);
+                if (metricColumnInd == -1)
+                    throw new InvalidOperationException($"Column {MetricColumnName} is not found among columns {GetColumnNamesString(table.Columns)}");
+
+                var result = new List<Metric>();
                 foreach (DataRow row in table.Rows)
                 {
                     var instrument = row[assetColumnInd].ToString();
@@ -78,6 +83,16 @@ namespace Lykke.Job.FinancesAlerts.DomainServices.MetricCalculators
         public Task StopAsync()
         {
             return Task.CompletedTask;
+        }
+
+        private string GetColumnNamesString(DataColumnCollection columns)
+        {
+            var columnNames = new List<string>();
+            foreach (DataColumn column in columns)
+            {
+                columnNames.Add(column.ColumnName);
+            }
+            return string.Join(",", columnNames);
         }
     }
 }
