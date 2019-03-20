@@ -8,6 +8,7 @@ using Lykke.Job.FinancesAlerts.Client.Models;
 using Lykke.Job.FinancesAlerts.Domain;
 using Lykke.Job.FinancesAlerts.Domain.Repositories;
 using Lykke.Job.FinancesAlerts.Domain.Services;
+using MoreLinq;
 
 namespace Lykke.Job.FinancesAlerts.DomainServices
 {
@@ -20,26 +21,32 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
         private readonly IAlertNotifier _alertNotifier;
         private readonly Dictionary<string, DateTime> _lastAlertTimeDict = new Dictionary<string, DateTime>();
         private readonly HashSet<string> _activeAlerts = new HashSet<string>();
+        private readonly HashSet<string> _disabledMetrics = new HashSet<string>();
 
         public MetricsChecker(
             ILogFactory logFactory,
             IAlertRuleRepository alertRuleRepository,
             IAlertSubscriptionRepository alertSubscriptionRepository,
             IMetricCalculatorRegistry metricCalculatorRegistry,
-            IAlertNotifier alertNotifier)
+            IAlertNotifier alertNotifier,
+            string[] disabledMetrics)
         {
             _log = logFactory.CreateLog(this);
             _alertRuleRepository = alertRuleRepository;
             _alertSubscriptionRepository = alertSubscriptionRepository;
             _metricCalculatorRegistry = metricCalculatorRegistry;
             _alertNotifier = alertNotifier;
+            disabledMetrics?.ForEach(m => _disabledMetrics.Add(m));
         }
 
         public async Task CheckAllMetricsAsync()
         {
             var metricCalculators = _metricCalculatorRegistry.GetAllMetricCalculators();
 
-            await Task.WhenAll(metricCalculators.Select(CheckMetricAsync));
+            await Task.WhenAll(
+                metricCalculators
+                    .Where(m => !_disabledMetrics.Contains(m.MetricInfo.Name))
+                    .Select(CheckMetricAsync));
         }
 
         private async Task CheckMetricAsync(IMetricCalculator metricCalculator)

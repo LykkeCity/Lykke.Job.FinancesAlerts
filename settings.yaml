@@ -21,6 +21,11 @@ FinancesAlertsJob:
         settings-key: FinancesAlertsJob-UseSmsMocks
         types:
             - Optional
+    DisabledMetrics:
+        settings-key: FinancesAlertsJob-DisabledMetrics
+        types:
+            - Optional
+            - JsonArray
 SlackNotifications:
     AzureQueue:
         ConnectionString:

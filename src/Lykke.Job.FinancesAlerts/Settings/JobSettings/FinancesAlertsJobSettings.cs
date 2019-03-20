@@ -11,5 +11,8 @@ namespace Lykke.Job.FinancesAlerts.Settings.JobSettings
 
         [Optional]
         public bool UseSmsMocks { get; set; }
+
+        [Optional]
+        public string[] DisabledMetrics { get; set; }
     }
 }
