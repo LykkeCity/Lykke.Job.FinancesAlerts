@@ -57,7 +57,8 @@ namespace Lykke.Job.FinancesAlerts.Modules
 
             builder.RegisterType<MetricsChecker>()
                 .As<IMetricsChecker>()
-                .SingleInstance();
+                .SingleInstance()
+                .WithParameter(TypedParameter.From(_settings.FinancesAlertsJob.DisabledMetrics));
 
             builder.RegisterType<MetricCalculatorRegistry>()
                 .As<IMetricCalculatorRegistry>()
@@ -87,8 +88,7 @@ namespace Lykke.Job.FinancesAlerts.Modules
 
             builder.RegisterType<CfCoinMarginMetricsCalculator>()
                 .As<IMetricCalculator>()
-                .SingleInstance()
-                .WithParameter(TypedParameter.From(_settings.FinancesAlertsJob.CoinGrossMarginView));
+                .SingleInstance();
         }
 
         private void RegisterAzureRepositories(ContainerBuilder builder)
