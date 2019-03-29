@@ -1,0 +1,81 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0. Solution items", "0. Solution items", "{7664A776-FBC4-4DB1-BE35-29E9664E24B4}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		README.md = README.md
+		settings.yaml = settings.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Domain", "1. Domain", "{CC2067D7-1971-47BB-B491-5649EA3C18B2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Job.FinancesAlerts.Domain", "src\Lykke.Job.FinancesAlerts.Domain\Lykke.Job.FinancesAlerts.Domain.csproj", "{7A0D21B0-EAAD-47DC-AC2C-9ACC56D5D198}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Job.FinancesAlerts.DomainServices", "src\Lykke.Job.FinancesAlerts.DomainServices\Lykke.Job.FinancesAlerts.DomainServices.csproj", "{78E6774E-B8B2-4BD0-9C5F-EED9058A9639}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Repositories", "2. Repositories", "{BF745453-B940-470E-81BC-43FB67703D4E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Job.FinancesAlerts.AzureRepositories", "src\Lykke.Job.FinancesAlerts.AzureRepositories\Lykke.Job.FinancesAlerts.AzureRepositories.csproj", "{6E996B95-7C79-4F4E-80AC-492E4E236877}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Client", "3. Client", "{14B5AF15-F733-4EF0-9FB9-3E61C4C83ADD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Tests", "4. Tests", "{8F9036B1-5106-4C69-B2D2-B78EE52687A0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Job.FinancesAlerts.Tests", "tests\Lykke.Job.FinancesAlerts.Tests\Lykke.Job.FinancesAlerts.Tests.csproj", "{45CF1FCA-CD3B-453F-B81C-09CB07BA2150}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5. Hosts", "5. Hosts", "{EE7F3159-E06C-497F-96D4-DB2A6B03A6AB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Job.FinancesAlerts", "src\Lykke.Job.FinancesAlerts\Lykke.Job.FinancesAlerts.csproj", "{FD2A379D-4A3F-4734-BCFB-0BC81BBDEBF5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lykke.Job.FinancesAlerts.Client", "client\Lykke.Job.FinancesAlerts.Client\Lykke.Job.FinancesAlerts.Client.csproj", "{8B4B9E7C-D7B3-48E1-BE21-32797285A7D1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7A0D21B0-EAAD-47DC-AC2C-9ACC56D5D198}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A0D21B0-EAAD-47DC-AC2C-9ACC56D5D198}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A0D21B0-EAAD-47DC-AC2C-9ACC56D5D198}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A0D21B0-EAAD-47DC-AC2C-9ACC56D5D198}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78E6774E-B8B2-4BD0-9C5F-EED9058A9639}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78E6774E-B8B2-4BD0-9C5F-EED9058A9639}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78E6774E-B8B2-4BD0-9C5F-EED9058A9639}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78E6774E-B8B2-4BD0-9C5F-EED9058A9639}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E996B95-7C79-4F4E-80AC-492E4E236877}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E996B95-7C79-4F4E-80AC-492E4E236877}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E996B95-7C79-4F4E-80AC-492E4E236877}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E996B95-7C79-4F4E-80AC-492E4E236877}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45CF1FCA-CD3B-453F-B81C-09CB07BA2150}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45CF1FCA-CD3B-453F-B81C-09CB07BA2150}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45CF1FCA-CD3B-453F-B81C-09CB07BA2150}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45CF1FCA-CD3B-453F-B81C-09CB07BA2150}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD2A379D-4A3F-4734-BCFB-0BC81BBDEBF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD2A379D-4A3F-4734-BCFB-0BC81BBDEBF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD2A379D-4A3F-4734-BCFB-0BC81BBDEBF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD2A379D-4A3F-4734-BCFB-0BC81BBDEBF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B4B9E7C-D7B3-48E1-BE21-32797285A7D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B4B9E7C-D7B3-48E1-BE21-32797285A7D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B4B9E7C-D7B3-48E1-BE21-32797285A7D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B4B9E7C-D7B3-48E1-BE21-32797285A7D1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7A0D21B0-EAAD-47DC-AC2C-9ACC56D5D198} = {CC2067D7-1971-47BB-B491-5649EA3C18B2}
+		{78E6774E-B8B2-4BD0-9C5F-EED9058A9639} = {CC2067D7-1971-47BB-B491-5649EA3C18B2}
+		{6E996B95-7C79-4F4E-80AC-492E4E236877} = {BF745453-B940-470E-81BC-43FB67703D4E}
+		{45CF1FCA-CD3B-453F-B81C-09CB07BA2150} = {8F9036B1-5106-4C69-B2D2-B78EE52687A0}
+		{FD2A379D-4A3F-4734-BCFB-0BC81BBDEBF5} = {EE7F3159-E06C-497F-96D4-DB2A6B03A6AB}
+		{8B4B9E7C-D7B3-48E1-BE21-32797285A7D1} = {14B5AF15-F733-4EF0-9FB9-3E61C4C83ADD}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EB6C0EF4-AA6A-444D-8603-3669F73A58BC}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Version>1.0.1</Version>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Update="Dockerfile">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Lykke.Sdk" Version="5.11.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.6.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\client\Lykke.Job.FinancesAlerts.Client\Lykke.Job.FinancesAlerts.Client.csproj" />
+    <ProjectReference Include="..\Lykke.Job.FinancesAlerts.AzureRepositories\Lykke.Job.FinancesAlerts.AzureRepositories.csproj" />
+    <ProjectReference Include="..\Lykke.Job.FinancesAlerts.Domain\Lykke.Job.FinancesAlerts.Domain.csproj" />
+    <ProjectReference Include="..\Lykke.Job.FinancesAlerts.DomainServices\Lykke.Job.FinancesAlerts.DomainServices.csproj" />
+  </ItemGroup>
+</Project>

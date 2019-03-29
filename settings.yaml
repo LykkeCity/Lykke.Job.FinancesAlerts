@@ -1,0 +1,49 @@
+FinancesAlertsJob:
+    Db:
+        LogsConnString:
+            settings-key: FinancesAlertsJob-Db-LogsConnString
+            types:
+            - AzureTableStorage
+        DataConnString:
+            settings-key: FinancesAlertsJob-Db-DataConnString
+            types:
+            - AzureTableStorage
+        SqlConnString:
+            settings-key: FinancesAlertsJob-Db-SqlConnString
+    CryptoFacilities:
+        ApiPath:
+            settings-key: FinancesAlertsJob-Cf-ApiPath
+        ApiPrivateKey:
+            settings-key: FinancesAlertsJob-Cf-ApiPrivateKey
+        ApiPublicKey:
+            settings-key: FinancesAlertsJob-Cf-ApiPublicKey
+        OpenPositionsFeed:
+            settings-key: FinancesAlertsJob-Cf-OpenPositionsFeed
+    CoinGrossMarginView:
+        settings-key: FinancesAlertsJob-CoinGrossMarginView
+    UseSmsMocks:
+        settings-key: FinancesAlertsJob-UseSmsMocks
+        types:
+            - Optional
+    DisabledMetrics:
+        settings-key: FinancesAlertsJob-DisabledMetrics
+        types:
+            - Optional
+            - JsonArray
+SlackNotifications:
+    AzureQueue:
+        ConnectionString:
+            settings-key: SlackNotificationsConnString
+            types:
+                - AzureTableStorage
+        QueueName:
+            settings-key: SlackQueueName
+MonitoringServiceClient:
+    MonitoringServiceUrl:
+        settings-key: MonitoringServiceUrl
+SmsSenderServiceClient:
+    ServiceUrl :
+        settings-key: SmsSenderServiceUrl
+EmailPartnerRouterServiceClient:
+    ServiceUrl:
+        settings-key: EmailPartnerRouterServiceUrl
