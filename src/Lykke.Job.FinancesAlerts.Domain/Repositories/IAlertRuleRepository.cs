@@ -1,19 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Lykke.Job.FinancesAlerts.Client.Models;
 
 namespace Lykke.Job.FinancesAlerts.Domain.Repositories
 {
     public interface IAlertRuleRepository
     {
-        Task<string> AddAsync(AlertRule alertRule);
+        Task<string> AddAsync(
+            string metricName,
+            ComparisonType comparisonType,
+            decimal threshold,
+            string createdBy);
 
-        Task UpdateAsync(AlertRule alertRule);
+        Task UpdateAsync(
+            string id,
+            string metricName,
+            ComparisonType comparisonType,
+            decimal threshold,
+            string changedBy);
 
         Task DeleteAsync(string metricName, string alertRuleId);
 
-        Task<AlertRule> GetAsync(string metricName, string id);
+        Task<IAlertRule> GetAsync(string metricName, string id);
 
-        Task<IEnumerable<AlertRule>> GetByMetricAsync(string metricName);
+        Task<IEnumerable<IAlertRule>> GetByMetricAsync(string metricName);
     }
 }

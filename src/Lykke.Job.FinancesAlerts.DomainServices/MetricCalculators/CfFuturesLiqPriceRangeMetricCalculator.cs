@@ -6,7 +6,6 @@ using Common;
 using Lykke.Common.Log;
 using Lykke.CryptoFacilities.WebSockets;
 using Lykke.CryptoFacilities.WebSockets.FeedMessages;
-using Lykke.Job.FinancesAlerts.Client.Models;
 using Lykke.Job.FinancesAlerts.Domain;
 using Lykke.Job.FinancesAlerts.Domain.Services;
 

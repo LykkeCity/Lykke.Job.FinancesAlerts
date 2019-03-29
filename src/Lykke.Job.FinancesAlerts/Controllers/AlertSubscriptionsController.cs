@@ -9,6 +9,7 @@ using Lykke.Common.Log;
 using Lykke.Job.FinancesAlerts.Client;
 using Lykke.Job.FinancesAlerts.Client.Models;
 using Lykke.Job.FinancesAlerts.Domain.Repositories;
+using Lykke.Job.FinancesAlerts.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -32,15 +33,16 @@ namespace Lykke.Job.FinancesAlerts.Controllers
         public async Task<List<AlertSubscription>> GetAlertSubscriptionsDataAsync(string alertRuleId)
         {
             var subscriptions = await _alertSubscriptionRepository.GetByAlertRuleAsync(alertRuleId);
-            return subscriptions.ToList();
+            return subscriptions.Select(i => i.ToClient()).ToList();
         }
 
         [HttpGet("{alertSubscriptionId}/rules/{alertRuleId}")]
         [SwaggerOperation("GetAlertSubscriptionById")]
         [ProducesResponseType(typeof(AlertSubscription), (int)HttpStatusCode.OK)]
-        public Task<AlertSubscription> GetAlertSubscriptionByIdAsync(string alertRuleId, string alertSubscriptionId)
+        public async Task<AlertSubscription> GetAlertSubscriptionByIdAsync(string alertRuleId, string alertSubscriptionId)
         {
-            return _alertSubscriptionRepository.GetAsync(alertRuleId, alertSubscriptionId);
+            var item = await _alertSubscriptionRepository.GetAsync(alertRuleId, alertSubscriptionId);
+            return item?.ToClient();
         }
 
         [HttpPost("")]
@@ -52,14 +54,11 @@ namespace Lykke.Job.FinancesAlerts.Controllers
             _log.Info(nameof(CreateAlertSibscriptionAsync), request.ChangedBy, request);
 
             return _alertSubscriptionRepository.AddAsync(
-                new AlertSubscription
-                {
-                    AlertRuleId = request.AlertRuleId,
-                    Address = request.Address,
-                    Type = request.Type,
-                    AlertFrequency = request.AlertFrequency,
-                    ChangedBy = request.ChangedBy,
-                });
+                request.AlertRuleId,
+                request.Type.ToDomain(),
+                request.Address,
+                request.AlertFrequency,
+                request.ChangedBy);
         }
 
         [HttpPut("")]
@@ -75,15 +74,12 @@ namespace Lykke.Job.FinancesAlerts.Controllers
             _log.Info(nameof(UpdateAlertSubscriptionAsync), request.ChangedBy, request);
 
             await _alertSubscriptionRepository.UpdateAsync(
-                new AlertSubscription
-                {
-                    Id = request.Id,
-                    AlertRuleId = request.AlertRuleId,
-                    Address = request.Address,
-                    Type = request.Type,
-                    AlertFrequency = request.AlertFrequency,
-                    ChangedBy = request.ChangedBy,
-                });
+                request.Id,
+                request.AlertRuleId,
+                request.Type.ToDomain(),
+                request.Address,
+                request.AlertFrequency,
+                request.ChangedBy);
         }
 
         [HttpDelete("")]

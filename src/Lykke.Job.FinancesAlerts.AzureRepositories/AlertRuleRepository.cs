@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AzureStorage;
-using Lykke.Job.FinancesAlerts.Client.Models;
+using Lykke.Job.FinancesAlerts.Domain;
 using Lykke.Job.FinancesAlerts.Domain.Repositories;
 
 namespace Lykke.Job.FinancesAlerts.AzureRepositories
@@ -16,41 +15,55 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
             _storage = storage;
         }
 
-        public async Task<string> AddAsync(AlertRule alertRule)
+        public async Task<string> AddAsync(
+            string metricName,
+            ComparisonType comparisonType,
+            decimal threshold,
+            string createdBy)
         {
-            var alertRuleEntity = AlertRuleEntity.Create(alertRule);
+            var alertRuleEntity = AlertRuleEntity.Create(
+                metricName,
+                comparisonType,
+                threshold,
+                createdBy);
             await _storage.InsertAsync(alertRuleEntity);
             return alertRuleEntity.Id;
         }
 
-        public async Task UpdateAsync(AlertRule alertRule)
+        public async Task UpdateAsync(
+            string id,
+            string metricName,
+            ComparisonType comparisonType,
+            decimal threshold,
+            string changedBy)
         {
             await _storage.MergeAsync(
-                AlertRuleEntity.GeneratePatitionKey(alertRule.MetricName),
-                AlertRuleEntity.GenerateRowKey(alertRule.Id),
+                AlertRuleEntity.GeneratePatitionKey(metricName),
+                AlertRuleEntity.GenerateRowKey(id),
                 i =>
                 {
-                    i.ComparisonType = alertRule.ComparisonType;
-                    i.ThresholdValue = alertRule.ThresholdValue;
+                    i.ComparisonType = comparisonType;
+                    i.ThresholdValue = threshold;
+                    i.ChangedBy = changedBy;
                     return i;
                 });
         }
 
-        public async Task DeleteAsync(string metricName, string alertRuleId)
+        public Task DeleteAsync(string metricName, string alertRuleId)
         {
-            await _storage.DeleteAsync(AlertRuleEntity.GeneratePatitionKey(metricName), alertRuleId);
+            return _storage.DeleteAsync(AlertRuleEntity.GeneratePatitionKey(metricName), alertRuleId);
         }
 
-        public async Task<AlertRule> GetAsync(string metricName, string id)
+        public async Task<IAlertRule> GetAsync(string metricName, string id)
         {
-            var item = await _storage.GetDataAsync(metricName, id);
-            return item?.ToDomain();
+            var result = await _storage.GetDataAsync(metricName, id);
+            return result;
         }
 
-        public async Task<IEnumerable<AlertRule>> GetByMetricAsync(string metricName)
+        public async Task<IEnumerable<IAlertRule>> GetByMetricAsync(string metricName)
         {
-            var items = await _storage.GetDataAsync(metricName);
-            return items.Select(i => i.ToDomain());
+            var result = await _storage.GetDataAsync(metricName);
+            return result;
         }
     }
 }

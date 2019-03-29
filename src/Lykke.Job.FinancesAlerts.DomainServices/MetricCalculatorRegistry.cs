@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Lykke.Job.FinancesAlerts.Client.Models;
+using Lykke.Job.FinancesAlerts.Domain;
 using Lykke.Job.FinancesAlerts.Domain.Services;
 
 namespace Lykke.Job.FinancesAlerts.DomainServices

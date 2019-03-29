@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Common.Log;
 using Lykke.Common.Log;
-using Lykke.Job.FinancesAlerts.Client.Models;
 using Lykke.Job.FinancesAlerts.Domain;
 using Lykke.Job.FinancesAlerts.Domain.Repositories;
 using Lykke.Job.FinancesAlerts.Domain.Services;
@@ -121,7 +120,7 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
 
         private async Task ProcessAlertEventAsync(
             Metric metric,
-            AlertRule alertRule,
+            IAlertRule alertRule,
             bool isStarted)
         {
             var subscriptions = await _alertSubscriptionRepository.GetByAlertRuleAsync(alertRule.Id);
@@ -156,19 +155,19 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
             }
         }
 
-        private string GenerateActiveMetricRuleKey(Metric metric, AlertRule alertRule)
+        private string GenerateActiveMetricRuleKey(Metric metric, IAlertRule alertRule)
         {
             return $"{alertRule.Id}_{metric.Instrument}";
         }
 
-        private string GenerateActiveSubscriptionKey(Metric metric, AlertSubscription subscription, bool isStarted)
+        private string GenerateActiveSubscriptionKey(Metric metric, IAlertSubscription subscription, bool isStarted)
         {
             return $"{metric.Name}_{metric.Instrument}_{subscription.Type}_{isStarted}";
         }
 
         private string GenerateAlerMessage(
             Metric metric,
-            AlertRule alertRule,
+            IAlertRule alertRule,
             bool isStarted)
         {
             string op;

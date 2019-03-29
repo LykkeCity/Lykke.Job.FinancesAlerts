@@ -1,10 +1,10 @@
 ﻿using System;
 using Lykke.AzureStorage.Tables;
-using Lykke.Job.FinancesAlerts.Client.Models;
+using Lykke.Job.FinancesAlerts.Domain;
 
 namespace Lykke.Job.FinancesAlerts.AzureRepositories
 {
-    public class AlertSubscriptionEntity : AzureTableEntity
+    public class AlertSubscriptionEntity : AzureTableEntity, IAlertSubscription
     {
         public string Id { get; private set; }
 
@@ -18,20 +18,25 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
 
         public string ChangedBy { get; set; }
 
-        internal static AlertSubscriptionEntity Create(AlertSubscription alertSubscription)
+        internal static AlertSubscriptionEntity Create(
+            string alertRuleId,
+            AlertSubscriptionType subscriptionType,
+            string address,
+            TimeSpan alertFrequency,
+            string createdBy)
         {
             var id = Guid.NewGuid().ToString();
 
             return new AlertSubscriptionEntity
             {
-                PartitionKey = GeneratePatitionKey(alertSubscription.AlertRuleId),
+                PartitionKey = GeneratePatitionKey(alertRuleId),
                 RowKey = GenerateRowKey(id),
                 Id = id,
-                AlertRuleId = alertSubscription.AlertRuleId,
-                Address = alertSubscription.Address,
-                ChangedBy = alertSubscription.ChangedBy,
-                Type = alertSubscription.Type,
-                AlertFrequency = alertSubscription.AlertFrequency,
+                AlertRuleId = alertRuleId,
+                Address = address,
+                Type = subscriptionType,
+                AlertFrequency = alertFrequency,
+                ChangedBy = createdBy,
             };
         }
 
@@ -43,19 +48,6 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
         internal static string GenerateRowKey(string id)
         {
             return id;
-        }
-
-        internal AlertSubscription ToDomain()
-        {
-            return new AlertSubscription
-            {
-                Id = Id,
-                AlertRuleId = AlertRuleId,
-                Type = Type,
-                Address = Address,
-                AlertFrequency = AlertFrequency,
-                ChangedBy = ChangedBy,
-            };
         }
     }
 }

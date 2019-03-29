@@ -1,10 +1,10 @@
 ﻿using System;
 using Lykke.AzureStorage.Tables;
-using Lykke.Job.FinancesAlerts.Client.Models;
+using Lykke.Job.FinancesAlerts.Domain;
 
 namespace Lykke.Job.FinancesAlerts.AzureRepositories
 {
-    public class AlertRuleEntity : AzureTableEntity
+    public class AlertRuleEntity : AzureTableEntity, IAlertRule
     {
         public string Id { get; private set; }
 
@@ -16,19 +16,23 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
 
         public decimal ThresholdValue { get; set; }
 
-        internal static AlertRuleEntity Create(AlertRule alertRule)
+        internal static AlertRuleEntity Create(
+            string metricName,
+            ComparisonType comparisonType,
+            decimal threshold,
+            string createdBy)
         {
             var id = Guid.NewGuid().ToString();
 
             return new AlertRuleEntity
             {
-                PartitionKey = GeneratePatitionKey(alertRule.MetricName),
+                PartitionKey = GeneratePatitionKey(metricName),
                 RowKey = GenerateRowKey(id),
                 Id = id,
-                MetricName = alertRule.MetricName,
-                ChangedBy = alertRule.ChangedBy,
-                ComparisonType = alertRule.ComparisonType,
-                ThresholdValue = alertRule.ThresholdValue,
+                MetricName = metricName,
+                ChangedBy = createdBy,
+                ComparisonType = comparisonType,
+                ThresholdValue = threshold,
             };
         }
 
@@ -40,18 +44,6 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
         internal static string GenerateRowKey(string id)
         {
             return id;
-        }
-
-        internal AlertRule ToDomain()
-        {
-            return new AlertRule
-            {
-                Id = Id,
-                MetricName = MetricName,
-                ComparisonType = ComparisonType,
-                ThresholdValue = ThresholdValue,
-                ChangedBy = ChangedBy,
-            };
         }
     }
 }

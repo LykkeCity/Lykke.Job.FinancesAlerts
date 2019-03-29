@@ -2,6 +2,7 @@
 using Autofac;
 using AzureStorage.Tables;
 using Common;
+using JetBrains.Annotations;
 using Lykke.Common.Log;
 using Lykke.Job.FinancesAlerts.AzureRepositories;
 using Lykke.Job.FinancesAlerts.Domain.Repositories;
@@ -20,6 +21,7 @@ using Lykke.SettingsReader;
 
 namespace Lykke.Job.FinancesAlerts.Modules
 {
+    [UsedImplicitly]
     public class JobModule : Module
     {
         private readonly AppSettings _settings;
