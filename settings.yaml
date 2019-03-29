@@ -19,6 +19,8 @@ FinancesAlertsJob:
             settings-key: FinancesAlertsJob-Cf-ApiPublicKey
         OpenPositionsFeed:
             settings-key: FinancesAlertsJob-Cf-OpenPositionsFeed
+    CoinGrossMarginView:
+        settings-key: FinancesAlertsJob-CoinGrossMarginView
     UseSmsMocks:
         settings-key: FinancesAlertsJob-UseSmsMocks
         types:

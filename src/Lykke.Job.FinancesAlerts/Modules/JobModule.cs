@@ -88,7 +88,8 @@ namespace Lykke.Job.FinancesAlerts.Modules
 
             builder.RegisterType<CfCoinMarginMetricsCalculator>()
                 .As<IMetricCalculator>()
-                .SingleInstance();
+                .SingleInstance()
+                .WithParameter(TypedParameter.From(_settings.FinancesAlertsJob.CoinGrossMarginView));
         }
 
         private void RegisterAzureRepositories(ContainerBuilder builder)

@@ -8,6 +8,8 @@ namespace Lykke.Job.FinancesAlerts.Settings.JobSettings
 
         public CryptoFacilitiesSettings CryptoFacilities { get; set; }
 
+        public string CoinGrossMarginView { get; set; }
+
         [Optional]
         public bool UseSmsMocks { get; set; }
 

@@ -13,19 +13,23 @@ namespace Lykke.Job.FinancesAlerts.DomainServices.MetricCalculators
 {
     public class CfCoinMarginMetricsCalculator : IMetricCalculator
     {
-        private const string CoinGrossMarginView = "[lyciprogramm].[vCfCoinsGrossMargin]";
         private const string AssetColumnName = "AssetId";
         private const string MetricColumnName = "GrossMargin";
 
         private readonly ILog _log;
         private readonly ISqlAdapter _sqlAdapter;
+        private readonly string _coinGrossMarginView;
 
         public MetricInfo MetricInfo { get; }
 
-        public CfCoinMarginMetricsCalculator(ILogFactory logFactory, ISqlAdapter sqlAdapter)
+        public CfCoinMarginMetricsCalculator(
+            ILogFactory logFactory,
+            ISqlAdapter sqlAdapter,
+            string coinGrossMarginView)
         {
             _log = logFactory.CreateLog(this);
             _sqlAdapter = sqlAdapter;
+            _coinGrossMarginView = coinGrossMarginView;
 
             MetricInfo = new MetricInfo
             {
@@ -39,7 +43,7 @@ namespace Lykke.Job.FinancesAlerts.DomainServices.MetricCalculators
         {
             try
             {
-                var dataset = _sqlAdapter.GetDataFromTableOrView(CoinGrossMarginView);
+                var dataset = _sqlAdapter.GetDataFromTableOrView(_coinGrossMarginView);
                 var table = dataset.Tables[0];
                 var assetColumnInd = table.Columns.IndexOf(AssetColumnName);
                 if (assetColumnInd == -1)
