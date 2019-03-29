@@ -80,12 +80,15 @@ namespace Lykke.Job.FinancesAlerts.Modules
             builder.RegisterType<CfFuturesLiqPriceRangeMetricCalculator>()
                 .As<IMetricCalculator>()
                 .SingleInstance()
-                .WithParameter(TypedParameter.From(_settings.FinancesAlertsJob.CryptoFacilities));
+                .WithParameter("apiPath", _settings.FinancesAlertsJob.CryptoFacilities.ApiPath)
+                .WithParameter("apiPrivateKey", _settings.FinancesAlertsJob.CryptoFacilities.ApiPrivateKey)
+                .WithParameter("apiPublicKey", _settings.FinancesAlertsJob.CryptoFacilities.ApiPublicKey)
+                .WithParameter("openPositionsFeed", _settings.FinancesAlertsJob.CryptoFacilities.OpenPositionsFeed);
 
             builder.RegisterType<CfCoinMarginMetricsCalculator>()
                 .As<IMetricCalculator>()
                 .SingleInstance()
-                .WithParameter(TypedParameter.From(_settings.FinancesAlertsJob.CryptoFacilities));
+                .WithParameter(TypedParameter.From(_settings.FinancesAlertsJob.CoinGrossMarginView));
         }
 
         private void RegisterAzureRepositories(ContainerBuilder builder)

@@ -6,14 +6,14 @@ namespace Lykke.Job.FinancesAlerts.Domain.Repositories
 {
     public interface IAlertRuleRepository
     {
-        Task<string> AddAsync(IAlertRule alertRule);
+        Task<string> AddAsync(AlertRule alertRule);
 
-        Task UpdateAsync(IAlertRule alertRule);
+        Task UpdateAsync(AlertRule alertRule);
 
         Task DeleteAsync(string metricName, string alertRuleId);
 
-        Task<IAlertRule> GetAsync(string metricName, string id);
+        Task<AlertRule> GetAsync(string metricName, string id);
 
-        Task<IEnumerable<IAlertRule>> GetByMetricAsync(string metricName);
+        Task<IEnumerable<AlertRule>> GetByMetricAsync(string metricName);
     }
 }

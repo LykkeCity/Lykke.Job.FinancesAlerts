@@ -48,9 +48,8 @@ namespace Lykke.Job.FinancesAlerts.Controllers
                 foreach (var metricAlertRule in metricAlertRules)
                 {
                     var subscriptions = await _alertSubscriptionRepository.GetByAlertRuleAsync(metricAlertRule.Id);
-                    var alertRule = AlertRule.Copy(metricAlertRule);
-                    alertRule.SubscriptionsCount = subscriptions.Count();
-                    alertRules.Add(alertRule);
+                    metricAlertRule.SubscriptionsCount = subscriptions.Count();
+                    alertRules.Add(metricAlertRule);
                 }
             }
 
@@ -69,13 +68,12 @@ namespace Lykke.Job.FinancesAlerts.Controllers
             return Task.FromResult(_metricCalculatorRegistry.GetAvailableMetrics());
         }
 
-        [HttpGet("{metricName}/{alertRuleId}")]
+        [HttpGet("{alertRuleId}/metrics/{metricName}")]
         [SwaggerOperation("GetAlertRuleById")]
         [ProducesResponseType(typeof(AlertRule), (int) HttpStatusCode.OK)]
-        public async Task<AlertRule> GetAlertRuleByIdAsync(string metricName, string alertRuleId)
+        public Task<AlertRule> GetAlertRuleByIdAsync(string metricName, string alertRuleId)
         {
-            var alertRule = await _alertRuleRepository.GetAsync(metricName, alertRuleId);
-            return AlertRule.Copy(alertRule);
+            return _alertRuleRepository.GetAsync(metricName, alertRuleId);
         }
 
         [HttpPost("")]

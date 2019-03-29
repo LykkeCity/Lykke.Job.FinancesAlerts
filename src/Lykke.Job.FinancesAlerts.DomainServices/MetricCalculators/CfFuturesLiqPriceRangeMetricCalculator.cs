@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Common;
 using Lykke.Common.Log;
-using Lykke.CryptoFacilities;
 using Lykke.CryptoFacilities.WebSockets;
 using Lykke.CryptoFacilities.WebSockets.FeedMessages;
 using Lykke.Job.FinancesAlerts.Client.Models;
@@ -13,20 +12,31 @@ using Lykke.Job.FinancesAlerts.Domain.Services;
 
 namespace Lykke.Job.FinancesAlerts.DomainServices.MetricCalculators
 {
-    public class CfFuturesLiqPriceRangeMetricCalculator : IMetricCalculator
+    public class CfFuturesLiqPriceRangeMetricCalculator : IMetricCalculator, IDisposable
     {
         private readonly ILogFactory _logFactory;
-        private readonly CryptoFacilitiesApiSettings _cryptoFacilitiesApiSettings;
+        private readonly string _apiPath;
+        private readonly string _apiPrivateKey;
+        private readonly string _apiPublicKey;
+        private readonly string _openPositionsFeed;
         private readonly Dictionary<string, decimal> _instumentsMetricDictionary = new Dictionary<string, decimal>();
 
         private PrivateCryptoFacilitiesConnection<OpenPositionsMessage, OpenPositionsMessage> _privateCfWsClient;
 
         public MetricInfo MetricInfo { get; }
 
-        public CfFuturesLiqPriceRangeMetricCalculator(ILogFactory logFactory, CryptoFacilitiesApiSettings cryptoFacilitiesApiSettings)
+        public CfFuturesLiqPriceRangeMetricCalculator(
+            ILogFactory logFactory,
+            string apiPath,
+            string apiPrivateKey,
+            string apiPublicKey,
+            string openPositionsFeed)
         {
             _logFactory = logFactory;
-            _cryptoFacilitiesApiSettings = cryptoFacilitiesApiSettings;
+            _apiPath = apiPath;
+            _apiPrivateKey = apiPrivateKey;
+            _apiPublicKey = apiPublicKey;
+            _openPositionsFeed = openPositionsFeed;
 
             MetricInfo = new MetricInfo
             {
@@ -42,12 +52,12 @@ namespace Lykke.Job.FinancesAlerts.DomainServices.MetricCalculators
                 throw new InvalidOperationException($"{nameof(CfFuturesLiqPriceRangeMetricCalculator)} is already started");
 
             _privateCfWsClient = new PrivateCryptoFacilitiesConnection<OpenPositionsMessage, OpenPositionsMessage>(
-                _cryptoFacilitiesApiSettings.ApiPath,
-                "open_positions",
+                _apiPath,
+                _openPositionsFeed,
                 HandlerMessageAsync,
                 HandlerMessageAsync,
-                _cryptoFacilitiesApiSettings.ApiPrivateKey,
-                _cryptoFacilitiesApiSettings.ApiPublicKey,
+                _apiPrivateKey,
+                _apiPublicKey,
                 TimeSpan.FromSeconds(60),
                 _logFactory);
 

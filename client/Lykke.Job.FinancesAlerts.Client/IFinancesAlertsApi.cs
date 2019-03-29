@@ -18,7 +18,7 @@ namespace Lykke.Job.FinancesAlerts.Client
         [Get("/api/alerts/metrics")]
         Task<List<MetricInfo>> GetAlertRulesMetricsAsync();
 
-        [Get("/api/alerts/{metricName}/{alertRuleId}")]
+        [Get("/api/alerts/{alertRuleId}/metrics/{metricName}")]
         Task<AlertRule> GetAlertRuleByIdAsync(string metricName, string alertRuleId);
 
         [Post("/api/alerts")]

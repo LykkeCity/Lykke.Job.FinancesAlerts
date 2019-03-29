@@ -1,8 +1,10 @@
 ﻿using System;
+using JetBrains.Annotations;
 
 namespace Lykke.Job.FinancesAlerts.Client.Models
 {
-    public class AlertSubscription : IAlertSubscription
+    [PublicAPI]
+    public class AlertSubscription
     {
         public string Id { get; set; }
         public string AlertRuleId { get; set; }
@@ -10,18 +12,5 @@ namespace Lykke.Job.FinancesAlerts.Client.Models
         public string Address { get; set; }
         public TimeSpan AlertFrequency { get; set; }
         public string ChangedBy { get; set; }
-
-        public static AlertSubscription Copy(IAlertSubscription subscription)
-        {
-            return new AlertSubscription
-            {
-                Id = subscription.Id,
-                AlertRuleId = subscription.AlertRuleId,
-                Type = subscription.Type,
-                Address = subscription.Address,
-                AlertFrequency = subscription.AlertFrequency,
-                ChangedBy = subscription.ChangedBy,
-            };
-        }
     }
 }

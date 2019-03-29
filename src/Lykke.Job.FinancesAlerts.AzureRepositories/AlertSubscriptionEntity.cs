@@ -1,37 +1,24 @@
 ﻿using System;
+using Lykke.AzureStorage.Tables;
 using Lykke.Job.FinancesAlerts.Client.Models;
-using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Lykke.Job.FinancesAlerts.AzureRepositories
 {
-    public class AlertSubscriptionEntity : TableEntity, IAlertSubscription
+    public class AlertSubscriptionEntity : AzureTableEntity
     {
-        public string Id { get; set; }
+        public string Id { get; private set; }
 
         public string AlertRuleId { get; set; }
 
-        [IgnoreProperty]
-        public AlertSubscriptionType Type
-        {
-            get => Enum.Parse<AlertSubscriptionType>(TypeStr);
-            set => TypeStr = value.ToString();
-        }
+        public AlertSubscriptionType Type { get; set; }
 
-        [IgnoreProperty]
-        public TimeSpan AlertFrequency
-        {
-            get => TimeSpan.Parse(AlertFrequencyStr);
-            set => AlertFrequencyStr = value.ToString();
-        }
+        public TimeSpan AlertFrequency { get; set; }
 
         public string Address { get; set; }
 
         public string ChangedBy { get; set; }
 
-        public string TypeStr { get; set; }
-        public string AlertFrequencyStr { get; set; }
-
-        internal static AlertSubscriptionEntity Create(IAlertSubscription alertSubscription)
+        internal static AlertSubscriptionEntity Create(AlertSubscription alertSubscription)
         {
             var id = Guid.NewGuid().ToString();
 
@@ -43,8 +30,8 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
                 AlertRuleId = alertSubscription.AlertRuleId,
                 Address = alertSubscription.Address,
                 ChangedBy = alertSubscription.ChangedBy,
-                TypeStr = alertSubscription.Type.ToString(),
-                AlertFrequencyStr = alertSubscription.AlertFrequency.ToString(),
+                Type = alertSubscription.Type,
+                AlertFrequency = alertSubscription.AlertFrequency,
             };
         }
 
@@ -56,6 +43,19 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
         internal static string GenerateRowKey(string id)
         {
             return id;
+        }
+
+        internal AlertSubscription ToDomain()
+        {
+            return new AlertSubscription
+            {
+                Id = Id,
+                AlertRuleId = AlertRuleId,
+                Type = Type,
+                Address = Address,
+                AlertFrequency = AlertFrequency,
+                ChangedBy = ChangedBy,
+            };
         }
     }
 }

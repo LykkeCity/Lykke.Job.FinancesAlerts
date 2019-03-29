@@ -32,16 +32,15 @@ namespace Lykke.Job.FinancesAlerts.Controllers
         public async Task<List<AlertSubscription>> GetAlertSubscriptionsDataAsync(string alertRuleId)
         {
             var subscriptions = await _alertSubscriptionRepository.GetByAlertRuleAsync(alertRuleId);
-            return subscriptions.Select(AlertSubscription.Copy).ToList();
+            return subscriptions.ToList();
         }
 
-        [HttpGet("{alertRuleId}/{alertSubscriptionId}")]
+        [HttpGet("{alertSubscriptionId}/rules/{alertRuleId}")]
         [SwaggerOperation("GetAlertSubscriptionById")]
         [ProducesResponseType(typeof(AlertSubscription), (int)HttpStatusCode.OK)]
-        public async Task<AlertSubscription> GetAlertSubscriptionByIdAsync(string alertRuleId, string alertSubscriptionId)
+        public Task<AlertSubscription> GetAlertSubscriptionByIdAsync(string alertRuleId, string alertSubscriptionId)
         {
-            var alertSubscription = await _alertSubscriptionRepository.GetAsync(alertRuleId, alertSubscriptionId);
-            return AlertSubscription.Copy(alertSubscription);
+            return _alertSubscriptionRepository.GetAsync(alertRuleId, alertSubscriptionId);
         }
 
         [HttpPost("")]

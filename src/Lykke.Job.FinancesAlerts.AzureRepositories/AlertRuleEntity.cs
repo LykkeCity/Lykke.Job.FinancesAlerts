@@ -1,36 +1,22 @@
 ﻿using System;
-using System.Globalization;
+using Lykke.AzureStorage.Tables;
 using Lykke.Job.FinancesAlerts.Client.Models;
-using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Lykke.Job.FinancesAlerts.AzureRepositories
 {
-    public class AlertRuleEntity : TableEntity, IAlertRule
+    public class AlertRuleEntity : AzureTableEntity
     {
-        public string Id { get; set; }
+        public string Id { get; private set; }
 
         public string MetricName { get; set; }
 
         public string ChangedBy { get; set; }
 
-        [IgnoreProperty]
-        public ComparisonType ComparisonType
-        {
-            get => Enum.Parse<ComparisonType>(ComparisonTypeStr);
-            set => ComparisonTypeStr = value.ToString();
-        }
+        public ComparisonType ComparisonType { get; set; }
 
-        [IgnoreProperty]
-        public decimal ThresholdValue
-        {
-            get => decimal.Parse(ThresholdValueStr);
-            set => ThresholdValueStr = value.ToString(CultureInfo.InvariantCulture);
-        }
+        public decimal ThresholdValue { get; set; }
 
-        public string ThresholdValueStr { get; set; }
-        public string ComparisonTypeStr { get; set; }
-
-        internal static AlertRuleEntity Create(IAlertRule alertRule)
+        internal static AlertRuleEntity Create(AlertRule alertRule)
         {
             var id = Guid.NewGuid().ToString();
 
@@ -41,8 +27,8 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
                 Id = id,
                 MetricName = alertRule.MetricName,
                 ChangedBy = alertRule.ChangedBy,
-                ComparisonTypeStr = alertRule.ComparisonType.ToString(),
-                ThresholdValueStr = alertRule.ThresholdValue.ToString(CultureInfo.InvariantCulture),
+                ComparisonType = alertRule.ComparisonType,
+                ThresholdValue = alertRule.ThresholdValue,
             };
         }
 
@@ -54,6 +40,18 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
         internal static string GenerateRowKey(string id)
         {
             return id;
+        }
+
+        internal AlertRule ToDomain()
+        {
+            return new AlertRule
+            {
+                Id = Id,
+                MetricName = MetricName,
+                ComparisonType = ComparisonType,
+                ThresholdValue = ThresholdValue,
+                ChangedBy = ChangedBy,
+            };
         }
     }
 }

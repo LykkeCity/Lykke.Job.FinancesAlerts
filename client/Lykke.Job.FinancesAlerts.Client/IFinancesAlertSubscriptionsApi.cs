@@ -15,7 +15,7 @@ namespace Lykke.Job.FinancesAlerts.Client
         [Get("/api/subscriptions")]
         Task<List<AlertSubscription>> GetAlertSubscriptionsDataAsync(string alertRuleId);
 
-        [Get("/api/subscriptions/{alertRuleId}/{alertSubscriptionId}")]
+        [Get("/api/subscriptions/{alertSubscriptionId}/rules/{alertRuleId}")]
         Task<AlertSubscription> GetAlertSubscriptionByIdAsync(string alertRuleId, string alertSubscriptionId);
 
         [Post("/api/subscriptions")]

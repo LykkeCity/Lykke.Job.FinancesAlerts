@@ -1,22 +1,26 @@
 FinancesAlertsJob:
     Db:
         LogsConnString:
-            settings-key: FinancesAlertsJob-LogsConnString
+            settings-key: FinancesAlertsJob-Db-LogsConnString
             types:
             - AzureTableStorage
         DataConnString:
-            settings-key: FinancesAlertsJob-DataConnString
+            settings-key: FinancesAlertsJob-Db-DataConnString
             types:
             - AzureTableStorage
         SqlConnString:
-            settings-key: FinancesAlertsJob-SqlConnString
+            settings-key: FinancesAlertsJob-Db-SqlConnString
     CryptoFacilities:
         ApiPath:
-            settings-key: FinancesAlertsJob-CfApiPath
+            settings-key: FinancesAlertsJob-Cf-ApiPath
         ApiPrivateKey:
-            settings-key: FinancesAlertsJob-CfApiPrivateKey
+            settings-key: FinancesAlertsJob-Cf-ApiPrivateKey
         ApiPublicKey:
-            settings-key: FinancesAlertsJob-CfApiPublicKey
+            settings-key: FinancesAlertsJob-Cf-ApiPublicKey
+        OpenPositionsFeed:
+            settings-key: FinancesAlertsJob-Cf-OpenPositionsFeed
+    CoinGrossMarginView:
+        settings-key: FinancesAlertsJob-CoinGrossMarginView
     UseSmsMocks:
         settings-key: FinancesAlertsJob-UseSmsMocks
         types:

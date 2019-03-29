@@ -1,5 +1,8 @@
-﻿namespace Lykke.Job.FinancesAlerts.Client.Models
+﻿using JetBrains.Annotations;
+
+namespace Lykke.Job.FinancesAlerts.Client.Models
 {
+    [PublicAPI]
     public class MetricInfo
     {
         public string Name { get; set; }

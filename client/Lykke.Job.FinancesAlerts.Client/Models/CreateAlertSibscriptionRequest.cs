@@ -1,7 +1,9 @@
 ﻿using System;
+using JetBrains.Annotations;
 
 namespace Lykke.Job.FinancesAlerts.Client.Models
 {
+    [PublicAPI]
     public class CreateAlertSibscriptionRequest
     {
         public string AlertRuleId { get; set; }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AzureStorage;
 using Lykke.Job.FinancesAlerts.Client.Models;
@@ -15,14 +16,14 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
             _storage = storage;
         }
 
-        public async Task<string> AddAsync(IAlertSubscription alertSubscription)
+        public async Task<string> AddAsync(AlertSubscription alertSubscription)
         {
             var alertSubscriptionEntity = AlertSubscriptionEntity.Create(alertSubscription);
             await _storage.InsertAsync(alertSubscriptionEntity);
             return alertSubscriptionEntity.Id;
         }
 
-        public async Task UpdateAsync(IAlertSubscription alertSubscription)
+        public async Task UpdateAsync(AlertSubscription alertSubscription)
         {
             await _storage.MergeAsync(
                 AlertSubscriptionEntity.GeneratePatitionKey(alertSubscription.AlertRuleId),
@@ -41,14 +42,16 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
             await _storage.DeleteAsync(AlertSubscriptionEntity.GeneratePatitionKey(alertRuleId), alertSubscriptionId);
         }
 
-        public async Task<IAlertSubscription> GetAsync(string alertRuleId, string id)
+        public async Task<AlertSubscription> GetAsync(string alertRuleId, string id)
         {
-            return await _storage.GetDataAsync(alertRuleId, id);
+            var item = await _storage.GetDataAsync(alertRuleId, id);
+            return item?.ToDomain();
         }
 
-        public async Task<IEnumerable<IAlertSubscription>> GetByAlertRuleAsync(string alertRuleId)
+        public async Task<IEnumerable<AlertSubscription>> GetByAlertRuleAsync(string alertRuleId)
         {
-            return await _storage.GetDataAsync(alertRuleId);
+            var items = await _storage.GetDataAsync(alertRuleId);
+            return items.Select(i => i.ToDomain());
         }
     }
 }

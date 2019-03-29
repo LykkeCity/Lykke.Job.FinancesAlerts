@@ -121,7 +121,7 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
 
         private async Task ProcessAlertEventAsync(
             Metric metric,
-            IAlertRule alertRule,
+            AlertRule alertRule,
             bool isStarted)
         {
             var subscriptions = await _alertSubscriptionRepository.GetByAlertRuleAsync(alertRule.Id);
@@ -156,19 +156,19 @@ namespace Lykke.Job.FinancesAlerts.DomainServices
             }
         }
 
-        private string GenerateActiveMetricRuleKey(Metric metric, IAlertRule alertRule)
+        private string GenerateActiveMetricRuleKey(Metric metric, AlertRule alertRule)
         {
             return $"{alertRule.Id}_{metric.Instrument}";
         }
 
-        private string GenerateActiveSubscriptionKey(Metric metric, IAlertSubscription subscription, bool isStarted)
+        private string GenerateActiveSubscriptionKey(Metric metric, AlertSubscription subscription, bool isStarted)
         {
             return $"{metric.Name}_{metric.Instrument}_{subscription.Type}_{isStarted}";
         }
 
         private string GenerateAlerMessage(
             Metric metric,
-            IAlertRule alertRule,
+            AlertRule alertRule,
             bool isStarted)
         {
             string op;
