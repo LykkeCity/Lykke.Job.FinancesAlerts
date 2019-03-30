@@ -1,9 +1,12 @@
 ﻿using System;
-using Microsoft.WindowsAzure.Storage.Table;
+using Lykke.AzureStorage.Tables;
+using Lykke.AzureStorage.Tables.Entity.Annotation;
+using Lykke.AzureStorage.Tables.Entity.ValueTypesMerging;
 
 namespace Lykke.Job.FinancesAlerts.AzureRepositories
 {
-    public class SmsMessageMockEntity : TableEntity
+    [ValueTypeMergingStrategy(ValueTypeMergingStrategy.UpdateIfDirty)]
+    public class SmsMessageMockEntity : AzureTableEntity
     {
         public static string GeneratePartitionKey(string phoneNumber)
         {
@@ -14,7 +17,19 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
 
         public string PhoneNumber => PartitionKey;
 
-        public DateTime DateTime { get; set; }
+        private DateTime _dateTime;
+        public DateTime DateTime
+        {
+            get => _dateTime;
+            set
+            {
+                if (_dateTime != value)
+                {
+                    _dateTime = value;
+                    MarkValueTypePropertyAsDirty();
+                }
+            }
+        }
 
         public string From { get; set; }
 

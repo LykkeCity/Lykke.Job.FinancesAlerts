@@ -1,9 +1,12 @@
 ﻿using System;
 using Lykke.AzureStorage.Tables;
+using Lykke.AzureStorage.Tables.Entity.Annotation;
+using Lykke.AzureStorage.Tables.Entity.ValueTypesMerging;
 using Lykke.Job.FinancesAlerts.Domain;
 
 namespace Lykke.Job.FinancesAlerts.AzureRepositories
 {
+    [ValueTypeMergingStrategy(ValueTypeMergingStrategy.UpdateIfDirty)]
     public class AlertRuleEntity : AzureTableEntity, IAlertRule
     {
         public string Id { get; private set; }
@@ -12,9 +15,33 @@ namespace Lykke.Job.FinancesAlerts.AzureRepositories
 
         public string ChangedBy { get; set; }
 
-        public ComparisonType ComparisonType { get; set; }
+        private ComparisonType _comparisonType;
+        public ComparisonType ComparisonType
+        {
+            get => _comparisonType;
+            set
+            {
+                if (_comparisonType != value)
+                {
+                    _comparisonType = value;
+                    MarkValueTypePropertyAsDirty();
+                }
+            }
+        }
 
-        public decimal ThresholdValue { get; set; }
+        private decimal _thresholdValue;
+        public decimal ThresholdValue
+        {
+            get => _thresholdValue;
+            set
+            {
+                if (_thresholdValue != value)
+                {
+                    _thresholdValue = value;
+                    MarkValueTypePropertyAsDirty();
+                }
+            }
+        }
 
         internal static AlertRuleEntity Create(
             string metricName,

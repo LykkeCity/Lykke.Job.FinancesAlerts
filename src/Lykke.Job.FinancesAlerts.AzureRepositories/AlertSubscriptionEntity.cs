@@ -1,19 +1,46 @@
 ﻿using System;
 using Lykke.AzureStorage.Tables;
+using Lykke.AzureStorage.Tables.Entity.Annotation;
+using Lykke.AzureStorage.Tables.Entity.ValueTypesMerging;
 using Lykke.Job.FinancesAlerts.Domain;
 
 namespace Lykke.Job.FinancesAlerts.AzureRepositories
 {
+    [ValueTypeMergingStrategy(ValueTypeMergingStrategy.UpdateIfDirty)]
     public class AlertSubscriptionEntity : AzureTableEntity, IAlertSubscription
     {
         public string Id { get; private set; }
 
         public string AlertRuleId { get; set; }
 
-        public AlertSubscriptionType Type { get; set; }
+        private AlertSubscriptionType _type;
+        public AlertSubscriptionType Type
+        {
+            get => _type;
+            set
+            {
+                if (_type != value)
+                {
+                    _type = value;
+                    MarkValueTypePropertyAsDirty();
+                }
+            }
+        }
 
-        public TimeSpan AlertFrequency { get; set; }
-
+        private TimeSpan _alertFrequency;
+        public TimeSpan AlertFrequency
+        {
+            get => _alertFrequency;
+            set
+            {
+                if (_alertFrequency != value)
+                {
+                    _alertFrequency = value;
+                    MarkValueTypePropertyAsDirty();
+                }
+            }
+        }
+        
         public string Address { get; set; }
 
         public string ChangedBy { get; set; }
